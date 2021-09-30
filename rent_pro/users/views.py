@@ -5,10 +5,11 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.urls.base import reverse_lazy
 from django.contrib.auth.models import Group
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import get_user_model
 from .forms import *
 
 
-
+User = get_user_model()
 # Create your views here.
 class Index(TemplateView):
     template_name="test.html"

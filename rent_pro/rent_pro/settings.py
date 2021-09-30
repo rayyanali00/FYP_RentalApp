@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
-    'crispy_forms'
+    'crispy_forms',
+    'products.apps.ProductsConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -131,7 +133,7 @@ STATICFILES_DIRS = (
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
 
-LOGIN_REDIRECT_URL = 'users:test'
+LOGIN_REDIRECT_URL = 'products:products'
 LOGOUT_REDIRECT_URL = 'users:login'
 
 # Default primary key field type
