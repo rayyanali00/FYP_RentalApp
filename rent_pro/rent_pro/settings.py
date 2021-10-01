@@ -76,6 +76,7 @@ WSGI_APPLICATION = 'rent_pro.wsgi.application'
 
 AUTH_USER_MODEL = 'users.User'
 
+
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
