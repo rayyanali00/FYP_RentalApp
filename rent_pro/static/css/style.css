@@ -1,0 +1,9 @@
+.tag {
+    background-color: rgb(12, 141, 188);
+    border: 1px solid none;
+    width: 40px;
+    padding: 10px;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+}

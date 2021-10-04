@@ -22,6 +22,7 @@ class Sub_Category(models.Model):
     #     ("bed","sofas","diningtable","table","chairs","dressingtable")
     #     ("bed","sofas","diningtable","table","chairs","dressingtable")
     # ) 
+    
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=False)
     sub_category = models.CharField(max_length=255,null=True, blank=True)
 
