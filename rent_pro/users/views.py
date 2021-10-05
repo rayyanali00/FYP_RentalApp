@@ -24,6 +24,9 @@ class RegisterUser(SuccessMessageMixin,CreateView):
         g.user_set.add(self.object)
         return reverse_lazy('users:login')
         
+class UpdateProfile(LoginRequiredMixin, View):
+    pass
+    
 class Test(LoginRequiredMixin,TemplateView):
     template_name="test.html"
     redirect_field_name = None

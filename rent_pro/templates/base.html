@@ -33,6 +33,10 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'users:logout' %}">{{user.username}}</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'users:logout' %}"><i class="fas fa-cart-plus"></i></a>
+                    </li>
+
                     {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'users:login' %}">Login</a>

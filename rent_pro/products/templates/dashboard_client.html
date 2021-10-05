@@ -2,8 +2,13 @@
 
 <div class="row">
     <div class="col-lg-6">
-        <form method="POST">
-            {% csrf_token %} {{form.as_p}}
+        <form action="{% url 'products:products' %}" method="POST">
+            {% csrf_token %}
+
+            <select name="category" id="category" class="category">
+
+            </select>
+            <select name="sub_category" id="sub_category"></select>
             <button type="submit">Search</button>
         </form>
     </div>
@@ -26,6 +31,8 @@
             </div>
         </div>
     </div>
+    <script>
+    </script>
     {% endfor %}
 </div>
 <nav aria-label="Page navigation example">
@@ -51,11 +58,70 @@
         <li class="page-item"><a class="page-link" href="#">Next</a></li> -->
     </ul>
 </nav>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.22.0/axios.min.js" integrity="sha512-m2ssMAtdCEYGWXQ8hXVG4Q39uKYtbfaJL5QMTbhl2kc6vYyubrKHhr6aLLXW4ITeXSywQLn1AhsAaqrJl8Acfg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-    $("#sub_cat").on("change", function() {
-        console.log("asdsd")
-    })
+    var list = "{% url 'products:product_api' %}"
+    var category = document.getElementById("category")
+    var sub_category = document.getElementById("sub_category")
+    var sub_cat
+    var cat;
+    axios.get(list)
+        .then((data) => {
+            cat = Object.keys(data.data)
+            console.log(data.data)
+            for (var i of cat) {
+                console.log(i)
+                let createEle = document.createElement("option")
+                createEle.value = i
+                createEle.textContent = i
+                category.appendChild(createEle)
+            }
+            $(".category").on("change", function() {
+                var cat_value = $(this).val()
+                if (cat_value == "Furniture") {
+                    console.log(data.data["Furniture"])
+                    for (var f of data.data["Furniture"]) {
+                        console.log(f)
+                        let createEle = document.createElement("option")
+                        createEle.value = f
+                        createEle.textContent = f
+                        sub_category.appendChild(createEle)
+                    }
+                }
+                if (cat_value == "ElectricAppliances") {
+                    console.log(data.data["ElectricAppliances"])
+                    for (var f of data.data["ElectricAppliances"]) {
+                        console.log(f)
+                        let createEle = document.createElement("option")
+                        createEle.value = f
+                        createEle.textContent = f
+                        sub_category.appendChild(createEle)
+                    }
+                }
+                if (cat_value == "FitnessEquipment") {
+                    console.log(data.data["FitnessEquipment"])
+                    for (var f of data.data["FitnessEquipment"]) {
+                        console.log(f)
+                        let createEle = document.createElement("option")
+                        createEle.value = f
+                        createEle.textContent = f
+                        sub_category.appendChild(createEle)
+                    }
+                }
+                if (cat_value == "Crockery") {
+                    console.log(data.data["Crockery"])
+                    for (var f of data.data["Crockery"]) {
+                        console.log(f)
+                        let createEle = document.createElement("option")
+                        createEle.value = f
+                        createEle.textContent = f
+                        sub_category.appendChild(createEle)
+                    }
+                }
+            })
+
+        })
+        .catch(err => console.log(err))
 </script>
 
 {% endblock %}
