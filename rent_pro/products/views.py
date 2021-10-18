@@ -119,6 +119,18 @@ def get_cart_data(request):
         return JsonResponse({'url':reverse('products:get-cart-api')}) 
     
 def CartSystem(request):
-    cart_obj = Cart.objects.get(user=request.user)
-    print(cart_obj)
+    cart_obj = Cart.objects.filter(user=request.user)
+    cart_dict = {}
+    for i in range(len(cart_obj)):
+        cart_obj = {
+            "isd":{
+                "product_name":cart_obj[i].product_name
+            }
+            }
+        
+    print(cart_dict)
+    #        product_name = models.CharField(max_length=255,null=False, blank=False)
+    # product_category = models.CharField(max_length=255,null=False, blank=False)
+    # product_subcategory = models.CharField(max_length=255,null=False, blank=False)
+    # total_price = models.IntegerField(null=True, blank=True)
     return render(request,"cart.html")

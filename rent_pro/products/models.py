@@ -50,11 +50,9 @@ class Product(models.Model):
         return self.product_name
     
 class Cart(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    user = models.ForeignKey(User,on_delete=models.CASCADE, null=True)
     product_name = models.CharField(max_length=255,null=False, blank=False)
     product_category = models.CharField(max_length=255,null=False, blank=False)
     product_subcategory = models.CharField(max_length=255,null=False, blank=False)
     total_price = models.IntegerField(null=True, blank=True)
     
-    def __str__(self):
-        return self.user.email
