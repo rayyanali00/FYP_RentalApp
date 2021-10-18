@@ -44,6 +44,17 @@ class Product(models.Model):
     prod_img = models.ImageField(upload_to="item_pics", default="nothing.jpg")
     product_price = models.FloatField(max_length=255, null=False, blank=False)
     product_quantity = models.IntegerField(null=False)
+    timePeriod = models.IntegerField(null=False)
 
     def __str__(self):
         return self.product_name
+    
+class Cart(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    product_name = models.CharField(max_length=255,null=False, blank=False)
+    product_category = models.CharField(max_length=255,null=False, blank=False)
+    product_subcategory = models.CharField(max_length=255,null=False, blank=False)
+    total_price = models.IntegerField(null=True, blank=True)
+    
+    def __str__(self):
+        return self.user.email

@@ -1,11 +1,15 @@
-from django.shortcuts import render
+import re
+from django.core import paginator
+from django.db.models import query
+from django.http.response import HttpResponse
+from django.shortcuts import redirect, render
 from django.views.generic.base import TemplateView, View
 from django.views.generic import ListView,FormView,DetailView
-from .models import Category, Product, Sub_Category
+from .models import Category, Product, Sub_Category,Cart
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import CategoryForm
 from django.http import HttpResponseRedirect
-from django.urls.base import reverse_lazy
+from django.urls.base import reverse, reverse_lazy
 from django.utils.http import urlencode
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
@@ -20,44 +24,39 @@ class DashboardClient(LoginRequiredMixin,FormView):
     form_class = CategoryForm
     model = Category
 
+
+    def get_querylist(self,**kwargs):
+         query_list = {
+                "product_list":kwargs['product_list'],
+                "product":kwargs["product"]
+            }
+         return query_list
+
     def get_queryset(self):
         product_list = Product.objects.all()
         page = self.request.GET.get('page',1)
         paginator = Paginator(product_list, 10)
         query_list = {}
         try:
-            query_list = {
-                "product_list":product_list,
-                "product":paginator.page(page)
-            }
+            query_list = self.get_querylist(product_list=product_list, product=paginator.page(page))
+
         except PageNotAnInteger:
-            query_list = {
-                "product_list":product_list,
-                "product":paginator.page(1)
-            }
+            query_list=self.get_querylist(product_list=product_list, product=paginator.page(1))
+
         except EmptyPage:
-            query_list = {
-                "product_list":product_list,
-                "product":paginator.page(paginator.num_pages)
-            }
+            query_list=self.get_querylist(product_list=product_list, product=paginator.page(paginator.num_pages))
+
         return query_list
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        print("**querlist starts")
+        print(self.get_queryset())
+        print("**querylist ends")
         context["products"]=self.get_queryset()["product"]
         context["product_list"]=serializers.serialize("json",self.get_queryset()["product_list"])
         print(self.get_queryset())
         return context
-    
-    # def pos(self, form):
-    #     category = form.cleaned_data['prod_cat']
-    #     sub_category = form.cleaned_data['prod_sub']
-    #     query_params = {
-    #         'category':category,
-    #         'sub_category':sub_category
-    #     }
-    #     return HttpResponseRedirect(reverse_lazy('products:products_api')+f'?{urlencode(query_params)}')
-    
     
     def post(self, request, *args, **kwargs):
         category = self.request.POST.get('category')
@@ -68,10 +67,8 @@ class DashboardClient(LoginRequiredMixin,FormView):
         }   
         return HttpResponseRedirect(reverse_lazy('products:products_api')+f'?{urlencode(query_params)}')
     
-    # def get_form(self, form_class):
-    #     form = super().get_form(form_class=form_class)
-    #     form.['prod_cat'].queryset = Rate.objects.filter(company_id=the_company.id)
-
+    
+    
     
 def ProductCategoryApi(request):
         sub_category = Sub_Category.objects.values_list("category__cat_name","sub_category")
@@ -106,3 +103,22 @@ class ProductListFilter(LoginRequiredMixin,ListView):
 class ProductDetailView(LoginRequiredMixin,DetailView):
     template_name="product_detail.html"
     model = Product
+    
+def get_cart_data(request):
+    if request.method == 'POST':
+        request_getdata = request.POST.get('data_dict', None)
+        request_getdata = json.loads(request_getdata)
+        print(type(request_getdata['total_price']))
+        cart_obj = Cart.objects.create(user=request.user)
+        cart_obj.product_name=request_getdata['prod_name']
+        cart_obj.product_category=request_getdata['prod_cat']
+        cart_obj.product_subcategory=request_getdata['prod_sub']
+        cart_obj.total_price=request_getdata['total_price']
+        cart_obj.save()
+        print("data_saved")
+        return JsonResponse({'url':reverse('products:get-cart-api')}) 
+    
+def CartSystem(request):
+    cart_obj = Cart.objects.get(user=request.user)
+    print(cart_obj)
+    return render(request,"cart.html")

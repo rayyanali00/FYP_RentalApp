@@ -7,6 +7,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 from .forms import *
+from products.models import Cart
 
 
 User = get_user_model()

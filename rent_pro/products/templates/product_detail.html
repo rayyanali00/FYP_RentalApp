@@ -8,11 +8,14 @@
                 </div>
                 <div class="col-md-7">
                     <div class="card-body">
+                        <div>
+                            {% csrf_token %}
+                        </div>
                         <h5 class="card-title">{{product.product_name}}</h5>
                         <p class="card-text">{{product.product_desc}}</p>
-                        <p class="card-text">{{product.prod_cat}} {{product.prod_sub}}</p>
-                        <h4>Quantity : <input type="number" class="form-control w-25 d-inline" name="qunatity" id="qty" value="{{product.product_quantity}}" max="10" min="1"></h4>
-                        <h4 class="mt-3">Price : $ {{product.product_price}} <span class="text-muted" style="font-size: 1rem;">for 1 week</span></h4>
+                        <h4>TimePeriod : <input type="number" class="form-control w-25 d-inline" name="timeperiod" id="timeperiod" value="{{product.timePeriod}}" max="50" min="1"> <span class="text-muted" style="font-size: 1rem;">*in weeks</span></h4>
+                        <h4>Quantity : <input type="number" class="form-control w-25 d-inline" name="quantity" id="qty" value="1" max="{{product.product_quantity}}" min="1"></h4>
+                        <h4 class="mt-3">Price : $ <span class="price">{{product.product_price}}</span> <span class="text-muted" style="font-size: 1rem;">for 1 week</span></h4>
                         <div class="text-end">
                             <span class="tag text-center mx-3">
                                 {{product.prod_cat}}
@@ -23,11 +26,55 @@
                         </div>
                     </div>
                     <div class="card-footer mt-5">
-                        <button class="btn btn-primary mt-3" style="width: 100%">Book Now</button>
+                        <button class="btn btn-primary mt-3 book-btn" style="width: 100%">Book Now</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    let csrf_token = $("input[name=csrfmiddlewaretoken]").val()
+    let baseurl = window.location.origin
+    console.log(baseurl)
+    let prod_dict = {
+        prod_name: "{{product.product_name}}",
+        prod_cat: "{{product.prod_cat}}",
+        prod_sub: "{{product.prod_sub}}",
+        total_price: parseFloat($(".price").text())
+    }
+    $("#timeperiod").on("change", function() {
+        let timepr = parseInt($(this).val())
+        let quantity = parseInt($("#qty").val())
+        let prod_price = parseFloat($(".price").text())
+        prod_price = timepr * prod_price * quantity
+        $(".price").text(prod_price)
+        prod_price['total_price'] = prod_price
+        $("#qty").on("change", function() {
+            quantity = parseInt($(this).val())
+            prod_price = timepr * prod_price * quantity
+            $(".price").text(prod_price)
+            prod_dict['total_price'] = prod_price
+        })
+    })
+    $(".book-btn").on("click", function() {
+        console.log(prod_dict)
+        $.ajax({
+            url: `${baseurl}/users/get_book_products/`,
+            method: "POST",
+            "headers": {
+                "accept": "application/json",
+                "Access-Control-Allow-Origin": "*"
+            },
+            data: {
+                'data_dict': JSON.stringify(prod_dict),
+                'csrfmiddlewaretoken': csrf_token
+            },
+            dataType: 'json',
+            success: function(url) {
+                window.location.href = baseurl + url['url']
+            }
+        })
+    })
+</script>
 {% endblock %}

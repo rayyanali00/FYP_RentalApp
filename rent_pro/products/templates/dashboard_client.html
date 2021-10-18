@@ -6,9 +6,11 @@
             {% csrf_token %}
 
             <select name="category" id="category" class="category">
-
+                <option value="category">Select Category</option>
             </select>
-            <select name="sub_category" id="sub_category"></select>
+            <select name="sub_category" id="sub_category" class="sub_category">
+                <option value="category">Select Sub-Category</option>
+            </select>
             <button type="submit">Search</button>
         </form>
     </div>
@@ -63,19 +65,14 @@
     var list = "{% url 'products:product_api' %}"
     var category = document.getElementById("category")
     var sub_category = document.getElementById("sub_category")
-    var sub_cat
-    var cat;
+    var sub_cat = []
+    var cat = [];
     axios.get(list)
         .then((data) => {
             cat = Object.keys(data.data)
-            console.log(data.data)
-            for (var i of cat) {
-                console.log(i)
-                let createEle = document.createElement("option")
-                createEle.value = i
-                createEle.textContent = i
-                category.appendChild(createEle)
-            }
+            cat.forEach((val, ind) => {
+                $(".category").append(`<option value=${val}>${val}</option>`)
+            })
             $(".category").on("change", function() {
                 var cat_value = $(this).val()
                 if (cat_value == "Furniture") {
