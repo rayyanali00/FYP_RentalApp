@@ -18,7 +18,18 @@ from django.http import JsonResponse
 
 
 
+
 # Create your views here.
+
+class MainRedirect(LoginRequiredMixin, View):
+    def get(self,request, *args, **kwargs):
+        print(self.request.user.user_role)
+        if self.request.user.user_role=='Admin':
+            return HttpResponseRedirect(reverse('users:admin-dashboard'))
+
+        return HttpResponseRedirect(reverse('products:products'))    
+
+
 class DashboardClient(LoginRequiredMixin,FormView):
     template_name="dashboard_client.html"
     form_class = CategoryForm
@@ -68,8 +79,7 @@ class DashboardClient(LoginRequiredMixin,FormView):
         return HttpResponseRedirect(reverse_lazy('products:products_api')+f'?{urlencode(query_params)}')
     
     
-    
-    
+
 def ProductCategoryApi(request):
         sub_category = Sub_Category.objects.values_list("category__cat_name","sub_category")
         print(sub_category)
@@ -114,23 +124,24 @@ def get_cart_data(request):
         cart_obj.product_category=request_getdata['prod_cat']
         cart_obj.product_subcategory=request_getdata['prod_sub']
         cart_obj.total_price=request_getdata['total_price']
+        cart_obj.quantity = request_getdata['quantity']
         cart_obj.save()
         print("data_saved")
         return JsonResponse({'url':reverse('products:get-cart-api')}) 
     
 def CartSystem(request):
     cart_obj = Cart.objects.filter(user=request.user)
-    cart_dict = {}
-    for i in range(len(cart_obj)):
-        cart_obj = {
-            "isd":{
-                "product_name":cart_obj[i].product_name
-            }
-            }
-        
-    print(cart_dict)
-    #        product_name = models.CharField(max_length=255,null=False, blank=False)
-    # product_category = models.CharField(max_length=255,null=False, blank=False)
-    # product_subcategory = models.CharField(max_length=255,null=False, blank=False)
-    # total_price = models.IntegerField(null=True, blank=True)
-    return render(request,"cart.html")
+    context = {
+        "orders":cart_obj
+    }
+    return render(request,"cart.html", context)
+
+## class based view
+# class CartSystem(LoginRequiredMixin,ListView):
+#     template_name="cart.html"
+#     model = Cart
+#     context_object_name = "orders"
+    
+#     def get_queryset(self):
+#         query_set = Cart.objects.filter(user=self.request.user)
+#         return query_set

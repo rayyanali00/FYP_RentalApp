@@ -11,5 +11,6 @@ urlpatterns = [
     path("product_detail/<int:pk>/", views.ProductDetailView.as_view(), name="product_detail"),
     path("product_cat/", views.ProductCategoryApi, name="product_api"),
     path('get_book_products/',views.get_cart_data, name="book-products"),
-    path('cart/', views.CartSystem, name='get-cart-api')
+    path('cart/', views.CartSystem, name='get-cart-api'),
+    path('main-redirect/', views.MainRedirect.as_view(), name="main-redirect")
 ]

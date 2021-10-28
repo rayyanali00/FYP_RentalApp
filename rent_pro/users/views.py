@@ -32,3 +32,6 @@ class Test(LoginRequiredMixin,TemplateView):
     template_name="test.html"
     redirect_field_name = None
    
+class AdminDashboard(LoginRequiredMixin, TemplateView):
+    template_name="admin_dashboard.html"
+    

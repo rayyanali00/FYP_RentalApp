@@ -55,4 +55,7 @@ class Cart(models.Model):
     product_category = models.CharField(max_length=255,null=False, blank=False)
     product_subcategory = models.CharField(max_length=255,null=False, blank=False)
     total_price = models.IntegerField(null=True, blank=True)
+    quantity = models.IntegerField(null=True)
     
+    def __str__(self):
+        return self.user.username
