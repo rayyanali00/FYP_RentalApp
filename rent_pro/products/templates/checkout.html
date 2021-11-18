@@ -1,0 +1,31 @@
+{% extends 'base.html' %} {% block body %}
+<h1>This is Checkout page</h1>
+<form action="{{success_url}}" method="post">
+    {% csrf_token %}
+    <label for="email">
+        Email {{form.email}}
+    </label>
+    <br>
+    <label for="address">
+        Address {{form.address}}
+    </label>
+    <br>
+    <label for="total_amount">
+        total_amount {{form.total_amount}}
+    </label>
+    <label for="deliever_at">
+        Deliever At: {{form.deliever_at}}
+        <small>Make sure you give atleast 1 week headsup time for delievery</small>
+    </label>
+    <button type="submit">Place Order
+    </button>
+</form>
+
+<script>
+    $("#id_email").val("{{user.email}}")
+    $("#id_email, #id_total_amount").attr("readonly", true)
+    $("#id_total_amount").val("{{total_amount}}")
+    $("#id_deliever_at").removeAttr("type")
+    $("#id_deliever_at").attr("type", "date")
+</script>
+{% endblock %}

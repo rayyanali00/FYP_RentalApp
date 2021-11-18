@@ -8,3 +8,9 @@ class CategoryForm(ModelForm):
     class Meta:
         model = models.Product
         fields = ["prod_cat","prod_sub"]
+        
+class OrderForm(ModelForm):
+    class Meta:
+        model = models.Order
+        fields = ["address","email","total_amount","deliever_at"]
+        

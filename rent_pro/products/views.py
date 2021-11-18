@@ -1,13 +1,13 @@
 import re
 from django.core import paginator
 from django.db.models import query
-from django.http.response import HttpResponse
+from django.http.response import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.views.generic.base import TemplateView, View
 from django.views.generic import ListView,FormView,DetailView
-from .models import Category, Product, Sub_Category,Cart
+from .models import Category, Product, Sub_Category,Cart, Order
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import CategoryForm
+from .forms import CategoryForm,OrderForm
 from django.http import HttpResponseRedirect
 from django.urls.base import reverse, reverse_lazy
 from django.utils.http import urlencode
@@ -15,9 +15,13 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 from django.core import serializers
 from django.http import JsonResponse
-
-
-
+from django.conf import settings
+from django.core.mail import send_mail
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .serializers import CartSerializer, ProductSerializer,OrderSerializer
+from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 
 # Create your views here.
 
@@ -127,21 +131,102 @@ def get_cart_data(request):
         cart_obj.quantity = request_getdata['quantity']
         cart_obj.save()
         print("data_saved")
-        return JsonResponse({'url':reverse('products:get-cart-api')}) 
+        return JsonResponse({'url':reverse('products:get-cart-api')})
+    
+class OrderView(LoginRequiredMixin,View):
+    form_class = OrderForm
+    model = Order
+    
+    def get(self, *args, **kwargs):
+        context = {
+            'form':self.form_class,
+            'total_amount':self.get_queryset(),
+            'success_url':self.get_success_url()
+        }
+        return render(self.request, 'checkout.html', context)
+    
+    def get_queryset(self,*args,**kwargs):
+        qs = Cart.objects.filter(user=self.request.user, is_checkout=False).values('total_price')
+        total_price =0
+        for i in qs:
+            total_price+=i['total_price']
+        return total_price
+
+    def get_success_url(self,*args,**kwargs):
+        return reverse_lazy('products:order-success')
+    
+    
+def Order_Success(request):
+    if request.method == "POST":
+        order_obj = Order.objects.create()
+        cart_obj = Cart.objects.filter(user=request.user).update(is_checkout=True)
+        order_obj.user = request.user
+        order_obj.email = request.POST.get('email')
+        order_obj.address = request.POST.get('address')
+        order_obj.total_amount = request.POST.get('total_amount')
+        order_obj.deliever_at = request.POST.get('deliever_at')
+        order_obj.save()
+        subject = 'welcome to GFG world'
+        message = f'Hi {request.user.username}, thank you for registering in geeksforgeeks.'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = ['rayyan@inqline.com', ]
+        send_mail( subject, message, email_from, recipient_list )
+
+        return HttpResponseRedirect(reverse('products:checkout-success'))
+    return Http404
     
 def CartSystem(request):
-    cart_obj = Cart.objects.filter(user=request.user)
+    cart_obj = Cart.objects.filter(user=request.user, is_checkout=False)
+    cart_obj_count =cart_obj.count()
     context = {
-        "orders":cart_obj
+        "orders":cart_obj,
+        "count":cart_obj_count
     }
     return render(request,"cart.html", context)
 
-## class based view
-# class CartSystem(LoginRequiredMixin,ListView):
-#     template_name="cart.html"
-#     model = Cart
-#     context_object_name = "orders"
+def reset_cart(request):
+    cart_obj = Cart.objects.filter(user=request.user, is_checkout=False).delete()
+    return HttpResponseRedirect(reverse('products:get-cart-api'))
+
+def DeleteSingleProduct(request,id):
+    cart_obj = Cart.objects.filter(user=request.user, is_checkout=False, id=id).delete()
+    return HttpResponseRedirect(reverse('products:get-cart-api'))
     
-#     def get_queryset(self):
-#         query_set = Cart.objects.filter(user=self.request.user)
-#         return query_set
+def checkout_success(request):
+    order_id_obj = Order.objects.filter(user=request.user).first()
+    if order_id_obj.order_id:    
+        context = {
+            'order_id':order_id_obj.order_id
+        }
+        return render(request, 'checkout_success.html', context)
+    return Http404
+
+@api_view(['GET'])
+def Order_List(request):
+    order_obj = Order.objects.all()
+    serializer_obj = OrderSerializer(order_obj, many=True)
+    return Response(serializer_obj.data)
+
+def OrderListTemplate(request):
+    if request.user.user_role == 'Admin':
+        return render(request, 'orders_list.html')
+    raise PermissionDenied()
+
+@api_view(['GET'])
+def OrderDetailView(request,pk):
+    cart_obj = Cart.objects.filter(user=pk, is_checkout=True)
+    serializer_obj = CartSerializer(cart_obj, many=True)
+    return Response(serializer_obj.data)
+
+##extra django-rest-framework
+@api_view(['GET'])
+def api_overview(request):
+    return Response('Your api-overview')
+
+@api_view(['GET'])
+def products_api(request,pk):
+    prod_obj = Product.objects.get(id=pk)
+    serializer_obj = ProductSerializer(prod_obj, many=False)
+    return Response(serializer_obj.data)
+
+ 

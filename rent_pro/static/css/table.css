@@ -1,0 +1,175 @@
+th {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9em;
+    font-weight: bolder;
+}
+
+td {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9em;
+    padding-left: 22px !important;
+}
+
+table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>td.dtr-control:before,
+table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>th.dtr-control:before {
+    background-color: #00aeef !important;
+}
+
+table.dataTable thead th {
+    border-bottom: none !important;
+    text-align: left !important;
+}
+
+table.dataTable thead tr {
+    background-color: #00aeef !important;
+    color: white;
+}
+
+table.dataTable thead th:first-child {
+    border-radius: 15px 0 0 0 !important;
+}
+
+table.dataTable thead th:last-child {
+    border-radius: 0 15px 0 0 !important;
+}
+
+table.dataTable tbody td {
+    border-bottom: none !important;
+}
+
+table.dataTable.display tbody tr.odd>.sorting_1,
+table.dataTable.order-column.stripe tbody tr.odd>.sorting_1,
+table.dataTable.display tbody tr.even>.sorting_1,
+table.dataTable.order-column.stripe tbody tr.even>.sorting_1 {
+    background-color: rgba(233, 225, 230, 0.15) !important;
+}
+
+
+/* table.dataTable tbody{
+  border-bottom: none !important;
+} */
+
+table.dataTable.row-border tbody tr:first-child th,
+table.dataTable.row-border tbody tr:first-child td,
+table.dataTable.display tbody tr:first-child th,
+table.dataTable.display tbody tr:first-child td,
+table.dataTable.row-border tbody th,
+table.dataTable.row-border tbody td,
+table.dataTable.display tbody th,
+table.dataTable.display tbody td {
+    background-color: white !important;
+    /* text-align: left !important; */
+}
+
+table.dataTable.row-border tbody th,
+table.dataTable.row-border tbody td,
+table.dataTable.display tbody th,
+table.dataTable.display tbody td {
+    border: none !important;
+    text-align: left !important;
+}
+
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_processing,
+.dataTables_wrapper .dataTables_paginate {
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: bold !important;
+}
+
+
+/* .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    border: none !important;
+    background-color: transparent !important;
+    background: transparent !important;
+} */
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+    background: #00aeef !important;
+    border-radius: 5px !important;
+    color: white !important;
+    border-color: transparent !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: #00aeef !important;
+    border-radius: 5px !important;
+    color: white !important;
+    border-color: transparent !important;
+}
+
+select {
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    padding: 5px;
+    background-color: white;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.dataTables_wrapper .dataTables_filter input:focus {
+    box-shadow: 5px 10px 5px rgba(0, 130, 255, 0.06);
+}
+
+.page-item.active .page-link {
+    background-color: #00aeef !important;
+    border-radius: 5px !important;
+    color: white !important;
+    border-color: transparent !important;
+    padding: 0.5em 1em;
+    font-weight: bold;
+}
+
+.page-link:focus {
+    box-shadow: none;
+}
+
+.page-item.active:hover {
+    background-color: white !important;
+    color: #00aeef !important;
+}
+
+.page-link {
+    padding: 0.5em 1em !important;
+    border-radius: 5px !important;
+}
+
+table {
+    border-bottom: 1px solid rgb(215, 210, 210) !important;
+}
+
+#exportLink {
+    font-size: 0.9em;
+}
+
+.change-dt {
+    font-size: 13px;
+    padding-top: 0px;
+    padding-bottom: 1px;
+    height: 24px;
+    border-top: 1px solid whitesmoke !important;
+}
+
+.focusedRow {
+    font-weight: bold !important;
+    text-shadow: 1px 1px 0px #EEE !important;
+    color: #111 !important;
+}
+
+.preview-sec hr {
+    border: 0;
+    height: 1px;
+    background: #333;
+    background-image: linear-gradient(to right, #ccc, #333, #ccc);
+}
+
+select[name=date-cols],
+select[name=export-cols] {
+    font-size: 0.9rem !important;
+}
