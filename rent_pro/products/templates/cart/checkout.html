@@ -1,0 +1,83 @@
+{% extends 'base.html' %} {% block body %}
+<div class="row">
+    <div class="col-lg-5 mx-auto">
+        <div class="card prod-card">
+            <div class="card-header">
+                <h4>Shipping Details</h4>
+            </div>
+            <div class="card-body">
+                <form action="{{success_url}}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="email">Email address</label> {{form.email}}
+                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Shipping Address</label> {{form.address}}
+                    </div>
+                    <div class="form-group">
+                        <label for="total_amount">Total Amount</label> {{form.total_amount}}
+                    </div>
+                    <div class="form-group">
+                        <label for="country">Country</label> {{form.country}}
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <label for="state">State</label> {{form.state}}
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="city">City</label> {{form.city}}
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="zip_code">Zip Code</label> {{form.zip_code}}
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- <div class="card-body text-center">
+                        <select name="country" class="countries" id="countryId">
+                            <option value="">Select Country</option>
+                        </select>
+                        <select name="state" class="states" id="stateId">
+                            <option value="">Select State</option>
+                        </select>
+                        <select name="city" class="cities" id="cityId">
+                            <option value="">Select City</option>
+                        </select>
+                    </div> -->
+                    <div class="form-group">
+                        <label for="deliever_at">Delievery Date</label> {{form.deliever_at}}
+                        <small id="emailHelp" class="form-text text-muted">Make sure you give atleast 1 week headsup for the delievery.</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Checkout</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    let dt = new Date()
+    let mn = dt.getMonth() + 1
+    let date = dt.getDate() + 7
+    dt = dt.getFullYear() + '-' + mn + '-' + date
+    $("#id_email").val("{{user.email}}")
+    $("#id_email, #id_total_amount").attr("readonly", true)
+    $("#id_total_amount").val("{{total_amount}}")
+    $("#id_deliever_at").removeAttr("type")
+    $("#id_deliever_at").attr("type", "date")
+    $("input,select").addClass("form-control")
+    $("#id_deliever_at").attr("min", dt)
+    $("select[name=country], select[name=state], select[name=city]").removeAttr("id")
+    $("select[name=country]").attr("id", "countryId")
+    $("select[name=country]").addClass("countries")
+    $("select[name=state]").attr("id", "stateId")
+    $("select[name=state]").addClass("states")
+    $("select[name=city]").attr("id", "cityId")
+    $("select[name=city]").addClass("cities")
+</script>
+<script src="//geodata.solutions/includes/countrystatecity.js"></script>
+{% endblock %}

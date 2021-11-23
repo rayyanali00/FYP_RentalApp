@@ -20,7 +20,16 @@ urlpatterns = [
     path('delete_cart_product/<int:id>/',views.DeleteSingleProduct, name="delete-cart-product"),
     path('order-list-template/', views.OrderListTemplate, name="order-list-template"),
     path('order-list-api/',views.Order_List, name="order-list-api"),
-    path('order-detail-view/<int:pk>/',views.OrderDetailView, name="order-detail-view"),
+    path('order-detail-template/<int:pk>/<str:order_id>', views.OrderDetailTemplate, name="order-detail-template"),
+    path('order-detail-api/<int:pk>/<str:order_id>',views.OrderDetailApi, name="order-detail-api"),
+    path('order-status/',views.OrderStatusUpdate, name="order-status"),
+    path('order-status-form/<str:pk>/',views.OrderStatus, name="order-status-form"),
+    path('product-api/',views.products_api, name="product-api"),
+    path('product-list-template/',views.product_list_template, name="product-list-template"),
+    path('create-product/',views.CreateProduct.as_view(), name="create-product"),
+    path('delete-product/<int:pk>',views.ProductDelete, name="delete-product"),
+    path('update-product/<int:pk>',views.UpdateProduct.as_view(), name="update-product"),
+    # path('test/<str:id>/',views.test_view, name="test-view"),
     
     
     #unused

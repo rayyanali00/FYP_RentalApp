@@ -1,0 +1,64 @@
+{% extends 'base.html' %} {% block body %}
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card prod-card">
+            <div class="card-header">
+                {% if form.instance.pk %}
+                <h3>Edit Product</h3>
+                {% else %}
+                <h3>Add Product</h3> {% endif %}
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <label for="category">Product Category</label> {{form.prod_cat}}
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="subcategory">Product SubCategory</label> {{form.prod_sub}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Product Name</label> {{form.product_name}}
+                    </div>
+                    <div class="form-group">
+                        <label for="desc">Product Description</label> {{form.product_desc}}
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <label for="price">Product Price</label> {{form.product_price}}
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="quantity">Product Quantity</label> {{form.product_quantity}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="image">Product Image</label> {{form.prod_img}}
+                    </div>
+                    {% if form.instance.pk %}
+                    <button type="submit" class="btn btn-secondary">Edit Product</button> {% else %}
+                    <button type="submit" class="btn btn-primary">Add Product</button> {% endif %}
+                </form>
+                <!-- prod_cat = models.ForeignKey(Category, null=True, blank=True, on_delete=models.CASCADE)
+        prod_sub = models.ForeignKey(Sub_Category, null=True, blank=True, on_delete=models.CASCADE)
+        product_name = models.CharField(max_length=255, null=True, blank=True)
+        product_desc = models.CharField(max_length=255, null=True, blank=True)
+        prod_img = models.ImageField(upload_to="item_pics", default="nothing.jpg")
+        product_price = models.FloatField(max_length=255, null=True, blank=True)
+        product_quantity = models.IntegerField(null=True, blank=True)
+        timePeriod = models.IntegerField(null=True,default=1) -->
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.22.0/axios.min.js" integrity="sha512-m2ssMAtdCEYGWXQ8hXVG4Q39uKYtbfaJL5QMTbhl2kc6vYyubrKHhr6aLLXW4ITeXSywQLn1AhsAaqrJl8Acfg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $("input,select,textarea").addClass('form-control')
+</script>
+{% endblock %}

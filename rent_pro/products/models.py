@@ -4,6 +4,9 @@ from django.urls.base import reverse
 from users.models import User
 import uuid
 from datetime import datetime
+from django.db.models.signals import post_save,m2m_changed
+from django.db import transaction
+from django.dispatch import receiver
 
 # Create your models here.
 
@@ -30,16 +33,17 @@ class Product(models.Model):
     prod_cat = models.ForeignKey(Category, null=True, blank=True, on_delete=models.CASCADE)
     prod_sub = models.ForeignKey(Sub_Category, null=True, blank=True, on_delete=models.CASCADE)
     product_name = models.CharField(max_length=255, null=True, blank=True)
-    product_desc = models.CharField(max_length=255, null=False, blank=False)
+    product_desc = models.TextField(max_length=255, null=True, blank=True)
     prod_img = models.ImageField(upload_to="item_pics", default="nothing.jpg")
-    product_price = models.FloatField(max_length=255, null=False, blank=False)
-    product_quantity = models.IntegerField(null=False)
-    timePeriod = models.IntegerField(null=False)
+    product_price = models.FloatField(max_length=255, null=True, blank=True)
+    product_quantity = models.IntegerField(null=True, blank=True)
+    timePeriod = models.IntegerField(null=True,default=1)
 
     def __str__(self):
         return self.product_name
     
 class Cart(models.Model):
+    order_id = models.CharField(max_length=255, null=True, blank=True)
     user = models.ForeignKey(User,on_delete=models.CASCADE, null=True)
     product_name = models.CharField(max_length=255,null=False, blank=False)
     product_category = models.CharField(max_length=255,null=False, blank=False)
@@ -49,28 +53,31 @@ class Cart(models.Model):
     quantity = models.IntegerField(null=True)
     
     def __str__(self):
-        return self.user.username
+        return str(self.id)
+    
     
     
 class Order(models.Model):
     ORDER_STATUS = (
-        ("pending","Pending"),
-        ("delievered","Delievered"),
-        ("out for delievery","Out for delievery")
+        ("Pending","pending"),
+        ("Delievered","delievered"),
+        ("Out for delievery","out for delievery")
         )
-    
-    order_id = models.UUIDField(
-         primary_key = True,
-         default = uuid.uuid4,
-         editable = False)
+
+    order_id = models.CharField(max_length=255, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
     email = models.EmailField(max_length=255, null=True, blank=True)
     ordered_at = models.DateTimeField(auto_now_add=True,auto_now=False)
     deliever_at = models.DateField(null=True, blank=True)
     total_amount = models.FloatField(max_length=255, null=True, blank=True)
-    status = models.CharField(max_length=255,null=True, blank=True, choices=ORDER_STATUS, default="pending")
+    status = models.CharField(max_length=255,null=True, blank=True, choices=ORDER_STATUS, default="Pending")
+    country = models.CharField(max_length=255,null=True,blank=True)
+    state = models.CharField(max_length=255,null=True,blank=True)
+    city = models.CharField(max_length=255,null=True,blank=True)
+    zip_code = models.CharField(max_length=255,null=True,blank=True)
+
     
     def __str__(self):
         return str(self.order_id)
-    
+        

@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Monoton&display=swap');
+* {
+    font-family: 'Outfit', sans-serif;
+}
+
 .tag {
     background-color: rgb(12, 141, 188);
     border: 1px solid none;
@@ -7,4 +13,55 @@
     color: white;
     cursor: pointer;
     font-size: 0.7rem;
+}
+
+.arr {
+    color: white !important;
+}
+
+.offcanvas {
+    width: 18% !important;
+}
+
+.link {
+    color: black !important;
+    font-family: 'Outfit', sans-serif;
+    text-decoration: none;
+    font-size: 1.5rem;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
+}
+
+.offcanvas-title {
+    font-family: 'Monoton', cursive;
+}
+
+.dropdown-btn {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    color: black !important;
+}
+
+.dropdown-item {
+    font-size: 0.8rem !important;
+}
+
+.offcanvas,
+.navbar-bg {
+    /* background-color: #222222;
+  opacity: 93%; */
+    background-color: white !important;
+    box-shadow: 3px 6px 18px rgb(215, 205, 205) !important;
+}
+
+.offcanvas-start {
+    border-right: none !important;
+}
+
+.prod-card {
+    box-shadow: 3px 6px 18px rgb(215, 205, 205) !important;
+}
+
+.search-card {
+    border: 1px solid none;
+    box-shadow: 3px 6px 18px rgb(215, 205, 205) !important;
 }

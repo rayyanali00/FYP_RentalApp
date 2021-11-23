@@ -10,7 +10,28 @@ class CategoryForm(ModelForm):
         fields = ["prod_cat","prod_sub"]
         
 class OrderForm(ModelForm):
+    country = forms.ChoiceField(label="",
+                                initial='',
+                                widget=forms.Select(),
+                                required=True)
+    state = forms.ChoiceField(label="",
+                                initial='',
+                                widget=forms.Select(),
+                                required=True)
+    city = forms.ChoiceField(label="",
+                                initial='',
+                                widget=forms.Select(),
+                                required=True)
     class Meta:
         model = models.Order
-        fields = ["address","email","total_amount","deliever_at"]
+        fields = ["address","email","total_amount","deliever_at","country","state","city","zip_code"]
+        required = "__all__"
+class OrderStatusForm(ModelForm):
+    class Meta:
+        model = models.Order
+        fields = ["status"]
         
+class ProductForm(ModelForm):
+    class Meta:
+        model = models.Product
+        exclude = ["timePeriod"]

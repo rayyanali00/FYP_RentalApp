@@ -1,0 +1,30 @@
+[
+{
+    "model": "products.category",
+    "pk": 1,
+    "fields": {
+        "cat_name": "Furniture"
+    }
+},
+{
+    "model": "products.category",
+    "pk": 2,
+    "fields": {
+        "cat_name": "ElectricAppliances"
+    }
+},
+{
+    "model": "products.category",
+    "pk": 3,
+    "fields": {
+        "cat_name": "FitnessEquipment"
+    }
+},
+{
+    "model": "products.category",
+    "pk": 4,
+    "fields": {
+        "cat_name": "Crockery"
+    }
+}
+]

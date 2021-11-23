@@ -1,0 +1,56 @@
+{% extends 'base.html' %} {% block body %} {% if orders.count > 0 %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="text-right">
+            <a href="{% url 'products:products' %}" class="btn btn-primary">Continue Booking</a>
+            <a href="{% url 'products:reset-cart' %}" class="btn btn-danger">Reset Cart</a>
+
+        </div>
+    </div>
+</div>
+{% endif %} {% for order in orders %} {% if count > 0 %}
+<div class="card prod-card my-3">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-3">
+                <h5>Product Name</h5>
+                <p class="card-text mt-3">{{order.product_name}}</p>
+            </div>
+            <div class="col-lg-3">
+                <h5>Quantity</h5>
+                <p class="card-text mt-3">{{order.quantity}}</p>
+            </div>
+            <div class="col-lg-3">
+                <h5>Product Price</h5>
+                <p class="prod-price mt-3">$ <span class="price">{{order.total_price}}</span></p>
+            </div>
+            <div class="col-lg-3">
+                <h5>Delete Product</h5>
+                <a href="{% url 'products:delete-cart-product' order.id %}"><i class="fas fa-trash text-center text-danger "></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %} {% endif %} {% endfor %} {% if orders.count > 0 %}
+<div class="row">
+    <div class="col-lg-12">
+        <h4 class="text-right">Total Price : $ <span class="total_price"></span></h4>
+    </div>
+</div>
+<div class="row mt-2">
+    <div class="col-lg-4 mx-auto">
+        <a href="{% url 'products:checkout' %}" class="btn btn-success w-100">Go To Checkout</a>
+    </div>
+</div>
+{% else %}
+<h1 class="text-center">No Items Found In Cart</h1>
+{% endif %}
+<script>
+    let price = document.querySelectorAll(".price")
+    let total_price = 0;
+    for (var i = 0; i < price.length; i++) {
+        total_price += Number(price[i].textContent)
+    }
+    $(".total_price").text(total_price)
+</script>
+{% endblock %}

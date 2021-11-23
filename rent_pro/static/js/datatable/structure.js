@@ -7,6 +7,10 @@ function drawDataTable(dateCol, expArr, responseArrCols, records, tableId) {
         data: records,
         deferRender: true,
         columns: responseArrCols,
+        columnDefs: [{
+            "defaultContent": "-",
+            "targets": "_all"
+        }],
         "order": [
             [1, "asc"]
         ],
@@ -82,6 +86,21 @@ function drawDataTable(dateCol, expArr, responseArrCols, records, tableId) {
     $(".toggle-options").on("click", function() {
         $(".options").slideToggle(500, "linear");
     })
+    $("tr").on("click", function() {
+        console.log(table.row(this).data());
+    })
+
+    $('.dataTables_filter input').unbind().keyup(function(e) {
+        var value = $(this).val();
+        if (value.length > 3) {
+            table.search(value).draw();
+        } else {
+            //optional, reset the search if the phrase 
+            //is less then 3 characters long
+            table.search('').draw();
+        }
+    });
+
     $.fn.dataTable.moment = function(format, locale) {
         var types = $.fn.dataTable.ext.type;
 

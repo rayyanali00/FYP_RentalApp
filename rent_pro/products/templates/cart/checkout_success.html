@@ -1,0 +1,24 @@
+{% extends 'base.html' %} {% block body %}
+
+<div class="row">
+    <div class="col-lg-5 mx-auto">
+        <div class="card prod-card">
+            <div class="card-header">
+                <h4>Checkout Success</h4>
+            </div>
+            <div class="card-body">
+                <h4 class="text-center">Your order has been placed</h4>
+                <h6 class="text-center">Your order id is</h6>
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        <input type="text" readonly value="{{order_id}}" class="form-control">
+                    </div>
+                </div>
+                <div class="text-center my-4">
+                    <a href="https://mail.google.com/mail/u/0/#inbox" class="btn btn-secondary">Check Confirmation Email</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

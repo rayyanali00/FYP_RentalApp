@@ -1,0 +1,146 @@
+[
+{
+    "model": "products.sub_category",
+    "pk": 1,
+    "fields": {
+        "category": 1,
+        "sub_category": "Bed"
+    }
+},
+{
+    "model": "products.sub_category",
+    "pk": 2,
+    "fields": {
+        "category": 1,
+        "sub_category": "Sofa"
+    }
+},
+{
+    "model": "products.sub_category",
+    "pk": 3,
+    "fields": {
+        "category": 1,
+        "sub_category": "DiningTable"
+    }
+},
+{
+    "model": "products.sub_category",
+    "pk": 4,
+    "fields": {
+        "category": 1,
+        "sub_category": "Table"
+    }
+},
+{
+    "model": "products.sub_category",
+    "pk": 5,
+    "fields": {
+        "category": 1,
+        "sub_category": "Chairs"
+    }
+},
+{
+    "model": "products.sub_category",
+    "pk": 6,
+    "fields": {
+        "category": 1,
+        "sub_category": "DressingTable"
+    }
+},
+{
+    "model": "products.sub_category",
+    "pk": 7,
+    "fields": {
+        "category": 2,
+        "sub_category": "AirConditioner"
+    }
+},
+{
+    "model": "products.sub_category",
+    "pk": 8,
+    "fields": {
+        "category": 2,
+        "sub_category": "Fan"
+    }
+},
+{
+    "model": "products.sub_category",
+    "pk": 10,
+    "fields": {
+        "category": 2,
+        "sub_category": "Microwave"
+    }
+},
+{
+    "model": "products.sub_category",
+    "pk": 11,
+    "fields": {
+        "category": 2,
+        "sub_category": "Electric Kettle"
+    }
+},
+{
+    "model": "products.sub_category",
+    "pk": 12,
+    "fields": {
+        "category": 2,
+        "sub_category": "Water Dispenser"
+    }
+},
+{
+    "model": "products.sub_category",
+    "pk": 13,
+    "fields": {
+        "category": 3,
+        "sub_category": "Tredmill"
+    }
+},
+{
+    "model": "products.sub_category",
+    "pk": 15,
+    "fields": {
+        "category": 3,
+        "sub_category": "CyclingMachine"
+    }
+},
+{
+    "model": "products.sub_category",
+    "pk": 18,
+    "fields": {
+        "category": 3,
+        "sub_category": "Punching Bag"
+    }
+},
+{
+    "model": "products.sub_category",
+    "pk": 20,
+    "fields": {
+        "category": 3,
+        "sub_category": "Commando Machine"
+    }
+},
+{
+    "model": "products.sub_category",
+    "pk": 21,
+    "fields": {
+        "category": 3,
+        "sub_category": "Butterfly Machine"
+    }
+},
+{
+    "model": "products.sub_category",
+    "pk": 24,
+    "fields": {
+        "category": 4,
+        "sub_category": "Cabinets"
+    }
+},
+{
+    "model": "products.sub_category",
+    "pk": 25,
+    "fields": {
+        "category": 4,
+        "sub_category": "Electric Stove"
+    }
+}
+]

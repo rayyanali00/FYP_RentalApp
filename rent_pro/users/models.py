@@ -9,6 +9,11 @@ class User(AbstractUser):
         ("General","general"),
     )
     user_role = models.CharField(max_length=120, choices=USER_ROLE_CHOICES, default="General")
+    username = None
+    email = models.EmailField(max_length=255, unique=True)
+    
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

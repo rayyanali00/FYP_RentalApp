@@ -5,9 +5,10 @@ from django.http.response import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.views.generic.base import TemplateView, View
 from django.views.generic import ListView,FormView,DetailView
+from django.views.generic.edit import CreateView, UpdateView
 from .models import Category, Product, Sub_Category,Cart, Order
-from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import CategoryForm,OrderForm
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from .forms import CategoryForm,OrderForm,OrderStatusForm,ProductForm
 from django.http import HttpResponseRedirect
 from django.urls.base import reverse, reverse_lazy
 from django.utils.http import urlencode
@@ -16,12 +17,16 @@ import json
 from django.core import serializers
 from django.http import JsonResponse
 from django.conf import settings
-from django.core.mail import send_mail
+from django.core.mail import send_mail,EmailMultiAlternatives
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import CartSerializer, ProductSerializer,OrderSerializer
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
+import uuid
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 
 # Create your views here.
 
@@ -35,7 +40,7 @@ class MainRedirect(LoginRequiredMixin, View):
 
 
 class DashboardClient(LoginRequiredMixin,FormView):
-    template_name="dashboard_client.html"
+    template_name="product/dashboard_client.html"
     form_class = CategoryForm
     model = Category
 
@@ -96,7 +101,7 @@ def ProductCategoryApi(request):
         return JsonResponse(lst_dct, safe=False)
           
 class ProductListFilter(LoginRequiredMixin,ListView):
-    template_name="dashboard_client.html"
+    template_name="product/dashboard_client.html"
     def get_queryset(self):
 
         if self.request.method=="GET":
@@ -115,22 +120,24 @@ class ProductListFilter(LoginRequiredMixin,ListView):
         return context
     
 class ProductDetailView(LoginRequiredMixin,DetailView):
-    template_name="product_detail.html"
+    template_name="product/product_detail.html"
     model = Product
     
 def get_cart_data(request):
     if request.method == 'POST':
         request_getdata = request.POST.get('data_dict', None)
         request_getdata = json.loads(request_getdata)
-        print(type(request_getdata['total_price']))
         cart_obj = Cart.objects.create(user=request.user)
+        prod_obj = Product.objects.get(product_name=request_getdata['prod_name'])
+        prod_obj.product_quantity = prod_obj.product_quantity - request_getdata['quantity']
         cart_obj.product_name=request_getdata['prod_name']
         cart_obj.product_category=request_getdata['prod_cat']
         cart_obj.product_subcategory=request_getdata['prod_sub']
         cart_obj.total_price=request_getdata['total_price']
         cart_obj.quantity = request_getdata['quantity']
+        cart_obj.order_id = "hello"
         cart_obj.save()
-        print("data_saved")
+        prod_obj.save()
         return JsonResponse({'url':reverse('products:get-cart-api')})
     
 class OrderView(LoginRequiredMixin,View):
@@ -143,7 +150,7 @@ class OrderView(LoginRequiredMixin,View):
             'total_amount':self.get_queryset(),
             'success_url':self.get_success_url()
         }
-        return render(self.request, 'checkout.html', context)
+        return render(self.request, 'cart/checkout.html', context)
     
     def get_queryset(self,*args,**kwargs):
         qs = Cart.objects.filter(user=self.request.user, is_checkout=False).values('total_price')
@@ -155,26 +162,43 @@ class OrderView(LoginRequiredMixin,View):
     def get_success_url(self,*args,**kwargs):
         return reverse_lazy('products:order-success')
     
-    
+@login_required
 def Order_Success(request):
     if request.method == "POST":
+        uni_id = uuid.uuid4()
         order_obj = Order.objects.create()
-        cart_obj = Cart.objects.filter(user=request.user).update(is_checkout=True)
+        cart_obj = Cart.objects.filter(user=request.user).update(is_checkout=True,order_id=uni_id)
+        order_obj.order_id = uni_id
         order_obj.user = request.user
         order_obj.email = request.POST.get('email')
         order_obj.address = request.POST.get('address')
         order_obj.total_amount = request.POST.get('total_amount')
         order_obj.deliever_at = request.POST.get('deliever_at')
+        order_obj.country = request.POST.get('country')
+        order_obj.state = request.POST.get('state')
+        order_obj.city = request.POST.get('city')
+        order_obj.zip_code = request.POST.get('zip_code')
         order_obj.save()
-        subject = 'welcome to GFG world'
-        message = f'Hi {request.user.username}, thank you for registering in geeksforgeeks.'
-        email_from = settings.EMAIL_HOST_USER
-        recipient_list = ['rayyan@inqline.com', ]
-        send_mail( subject, message, email_from, recipient_list )
+        # subject = 'welcome to GFG world'
+        # message = f'Hi {request.user.username}, thank you for registering in geeksforgeeks.'
+        # email_from = settings.EMAIL_HOST_USER
+        # recipient_list = ['rayyan@inqline.com', ]
+        # send_mail( subject, message, email_from, recipient_list )
+        order_detail_url = reverse('products:order-detail-api',kwargs={'pk':request.user.id, 'order_id':uni_id})
+
+        subject, from_email, to = 'Booking Confirmed', settings.EMAIL_HOST_USER, 'rayyanali929@gmail.com'
+        text_content = 'This is an important message.'
+        html_content = f'<h1>Confirmation Email</h1> <h2>{request.user} your booking has been confirmed<h2>'\
+        f'<a href="http://127.0.0.1:8000/users/order-detail-template/{request.user.id}/{uni_id}"'\
+        f'class="btn btn-primary">Check Details</a>'
+        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
 
         return HttpResponseRedirect(reverse('products:checkout-success'))
     return Http404
     
+@login_required
 def CartSystem(request):
     cart_obj = Cart.objects.filter(user=request.user, is_checkout=False)
     cart_obj_count =cart_obj.count()
@@ -182,51 +206,132 @@ def CartSystem(request):
         "orders":cart_obj,
         "count":cart_obj_count
     }
-    return render(request,"cart.html", context)
+    return render(request,"cart/cart.html", context)
 
+@login_required
 def reset_cart(request):
     cart_obj = Cart.objects.filter(user=request.user, is_checkout=False).delete()
     return HttpResponseRedirect(reverse('products:get-cart-api'))
 
+@login_required
 def DeleteSingleProduct(request,id):
     cart_obj = Cart.objects.filter(user=request.user, is_checkout=False, id=id).delete()
     return HttpResponseRedirect(reverse('products:get-cart-api'))
     
+@login_required
 def checkout_success(request):
     order_id_obj = Order.objects.filter(user=request.user).first()
     if order_id_obj.order_id:    
         context = {
             'order_id':order_id_obj.order_id
         }
-        return render(request, 'checkout_success.html', context)
+        return render(request, 'cart/checkout_success.html', context)
     return Http404
 
+@login_required
 @api_view(['GET'])
 def Order_List(request):
-    order_obj = Order.objects.all()
+    order_obj = None
+    serializer_obj = None
+    if request.user.user_role=='Admin':
+        order_obj = Order.objects.all()
+    else:
+        order_obj = Order.objects.filter(user=request.user)    
     serializer_obj = OrderSerializer(order_obj, many=True)
     return Response(serializer_obj.data)
 
+@login_required
 def OrderListTemplate(request):
-    if request.user.user_role == 'Admin':
-        return render(request, 'orders_list.html')
-    raise PermissionDenied()
+    return render(request, 'orders/orders_list.html')
 
+@login_required
+def OrderDetailTemplate(request,pk,order_id):
+    context = { 'order_id':order_id,'pk':pk }
+    return render(request, 'orders/orders_detail.html',context)
+
+@login_required
 @api_view(['GET'])
-def OrderDetailView(request,pk):
-    cart_obj = Cart.objects.filter(user=pk, is_checkout=True)
+def OrderDetailApi(request,pk,order_id):
+    if request.user.user_role=='Admin':
+        cart_obj = Cart.objects.filter(user=pk, is_checkout=True,user__order__status="Pending",user__order__order_id=order_id)
+    else:
+        cart_obj = Cart.objects.filter(user=request.user, is_checkout=True,user__order__status="Pending",user__order__order_id=order_id)
     serializer_obj = CartSerializer(cart_obj, many=True)
     return Response(serializer_obj.data)
 
-##extra django-rest-framework
+@login_required
+def OrderStatusUpdate(request):
+    if request.user.user_role == "Admin":
+        order_obj = Order.objects.get(order_id=request.GET.get('order_id'))
+        form_ins = OrderStatusForm(instance=order_obj)
+        context = {
+            'form':form_ins,
+            'order_id':request.GET.get('order_id')
+        }
+        return render(request, 'orders/order_status_form.html', context)
+    
+    raise PermissionDenied()
+
+@login_required
+def OrderStatus(request,pk):
+    if request.method == "POST":
+        form = OrderStatusForm(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data.get('status'),pk)
+            order_obj = Order.objects.get(order_id=pk)
+            order_obj.status = form.cleaned_data.get('status')
+            order_obj.save()
+            return HttpResponseRedirect(reverse('products:order-list-template'))
+
+@login_required
+@api_view(['GET'])
+def products_api(request):
+    prod_obj = Product.objects.all()
+    serializer_obj = ProductSerializer(prod_obj, many=True)
+    return Response(serializer_obj.data)
+
+@login_required
+def product_list_template(request):
+    if request.user.user_role == "Admin":
+        return render(request, 'product/product_list.html')
+    raise PermissionDenied()
+
+
+class CreateProduct(LoginRequiredMixin,UserPassesTestMixin,CreateView):
+    model = Product
+    template_name = 'product/product_form.html'
+    form_class = ProductForm
+    success_url = reverse_lazy('products:product-list-template')
+
+    def test_func(self):
+        if self.request.user.user_role == "Admin":
+            return True
+        return False
+
+class UpdateProduct(LoginRequiredMixin,UserPassesTestMixin,SuccessMessageMixin,UpdateView):
+    model = Product
+    template_name = 'product/product_form.html'
+    form_class = ProductForm
+    success_url = reverse_lazy('products:product-list-template')
+    success_message = 'Product Updated Successfully'
+
+    def test_func(self):
+        if self.request.user.user_role == "Admin":
+            return True
+        return False
+
+def ProductDelete(request,pk):
+    prod_obj = Product.objects.get(id=pk).delete()
+    messages.success(request,"Product Deleted Successfully")
+    return HttpResponseRedirect(reverse('products:product-list-template'))
+
+    
+#extra django-rest-framework
+#unsued
 @api_view(['GET'])
 def api_overview(request):
     return Response('Your api-overview')
 
-@api_view(['GET'])
-def products_api(request,pk):
-    prod_obj = Product.objects.get(id=pk)
-    serializer_obj = ProductSerializer(prod_obj, many=False)
-    return Response(serializer_obj.data)
+
 
  

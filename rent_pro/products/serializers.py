@@ -1,11 +1,38 @@
 from rest_framework import serializers
-from .models import Cart, Product,Order
+from .models import Cart, Product,Order, Category,Sub_Category
 
+
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = "__all__"
+
+class Sub_CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sub_Category
+        fields = "__all__"
+        
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = "__all__"
-
+        fields = ["id","product_name","product_price","product_quantity","prod_cat","prod_sub"]        
+        
+        
+    def to_representation(self, instance):
+        '''
+        replace the prod_cat,prod_sub ids with the actual category and subcategory names
+        '''
+        rep = super().to_representation(instance)
+        obj = CategorySerializer(instance.prod_cat).data
+        obj = obj.get("cat_name")
+        obj1 = Sub_CategorySerializer(instance.prod_sub).data
+        obj1 = obj1.get("sub_category")
+        rep['prod_cat'] = obj
+        rep['prod_sub'] = obj1
+        return rep
+            
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
@@ -14,4 +41,5 @@ class OrderSerializer(serializers.ModelSerializer):
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
-        fields = "__all__"
+        exclude = ('user','is_checkout')
+        
