@@ -179,12 +179,6 @@ def Order_Success(request):
         order_obj.city = request.POST.get('city')
         order_obj.zip_code = request.POST.get('zip_code')
         order_obj.save()
-        # subject = 'welcome to GFG world'
-        # message = f'Hi {request.user.username}, thank you for registering in geeksforgeeks.'
-        # email_from = settings.EMAIL_HOST_USER
-        # recipient_list = ['rayyan@inqline.com', ]
-        # send_mail( subject, message, email_from, recipient_list )
-        order_detail_url = reverse('products:order-detail-api',kwargs={'pk':request.user.id, 'order_id':uni_id})
 
         subject, from_email, to = 'Booking Confirmed', settings.EMAIL_HOST_USER, 'rayyanali929@gmail.com'
         text_content = 'This is an important message.'
