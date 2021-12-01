@@ -180,7 +180,7 @@ def Order_Success(request):
         order_obj.zip_code = request.POST.get('zip_code')
         order_obj.save()
 
-        subject, from_email, to = 'Booking Confirmed', settings.EMAIL_HOST_USER, 'rayyanali929@gmail.com'
+        subject, from_email, to = 'Booking Confirmed', settings.EMAIL_HOST_USER, request.user.email
         text_content = 'This is an important message.'
         html_content = f'<h1>Confirmation Email</h1> <h2>{request.user} your booking has been confirmed<h2>'\
         f'<a href="http://127.0.0.1:8000/users/order-detail-template/{request.user.id}/{uni_id}"'\

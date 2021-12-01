@@ -1,0 +1,18 @@
+{% extends "project/base.html" %} {% load i18n %} {% block head_title %}{% trans "Account Inactive" %}{% endblock %} {% block body %}
+<div class="content d-flex align-items-center justify-content-center" style="height: 90vh;">
+    <div class="card pt-2 m-4">
+        <p class="card-header text-center">This Account Is Inactive</p>
+        <div class="card-body">
+            <p class="card-text text-center">Make sure to complete the <b><a class="" href="{% url 'users:signup-step-1' %}">signup</a></b> process to get instant access to Inqline Fit now!</p>
+            <p class="text-center">Or if your account was active before then please contact support.</p>
+        </div>
+    </div>
+</div>
+
+
+<!-- <form  action="{% url 'payment:membership-info' %}" method="post">
+    <input type="hidden" value="{{ObjectId}}" name="{{user.id}}">
+    <button type="submit" name="membership-button" value='1' class="btn btn-outline-warning">Proceed</button>
+  </form> -->
+
+{% endblock %}
