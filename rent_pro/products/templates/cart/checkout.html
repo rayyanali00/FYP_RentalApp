@@ -35,20 +35,9 @@
 
                         </div>
                     </div>
-                    <!-- <div class="card-body text-center">
-                        <select name="country" class="countries" id="countryId">
-                            <option value="">Select Country</option>
-                        </select>
-                        <select name="state" class="states" id="stateId">
-                            <option value="">Select State</option>
-                        </select>
-                        <select name="city" class="cities" id="cityId">
-                            <option value="">Select City</option>
-                        </select>
-                    </div> -->
                     <div class="form-group">
                         <label for="deliever_at">Delievery Date</label> {{form.deliever_at}}
-                        <small id="emailHelp" class="form-text text-muted">Make sure you give atleast 1 week headsup for the delievery.</small>
+                        <small id="emailHelp" class="form-text text-muted">Make sure you give atleast 3 days headsup for the delievery.</small>
                     </div>
                     <button type="submit" class="btn btn-primary">Checkout</button>
                 </form>
@@ -62,7 +51,8 @@
 <script>
     let dt = new Date()
     let mn = dt.getMonth() + 1
-    let date = dt.getDate() + 7
+    let date = dt.getDate() + 3
+    date = date > 10 ? date : '0' + date
     dt = dt.getFullYear() + '-' + mn + '-' + date
     $("#id_email").val("{{user.email}}")
     $("#id_email, #id_total_amount").attr("readonly", true)
