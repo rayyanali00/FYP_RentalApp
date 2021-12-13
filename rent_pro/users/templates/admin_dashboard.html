@@ -1,3 +1,5 @@
-{% extends 'base.html' %} {% block body %}
+{% extends 'base.html' %} {% load notifications_tags %} {% block body %}
 <h1>This is admin page</h1>
-{% endblock %}
+{% for notification in user.notifications.unread %}
+<h1>{{ notification.description }}</h1>
+{% live_notify_badge %} {% endfor %} {% endblock %}

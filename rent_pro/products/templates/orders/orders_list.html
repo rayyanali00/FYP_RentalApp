@@ -102,7 +102,7 @@
                                 if (type === "sort") {
                                     return data;
                                 } else {
-                                    data = moment.utc(data, "YYYY-MM-DD HH:mm").tz('America/New_York')
+                                    data = moment.utc(data, "YYYY-MM-DD HH:mm").tz('Pakistan/Karachi')
                                     data = moment(data).format("L HH:mm")
                                     return data;
                                 }
@@ -114,7 +114,7 @@
                                     if (type === "sort") {
                                         return data;
                                     } else {
-                                        data = moment.utc(data, "YYYY-MM-DD").tz('America/New_York')
+                                        data = moment.utc(data, "YYYY-MM-DD").tz('Pakistan/Karachi')
                                         data = moment(data).format("L")
                                         return data;
                                     }

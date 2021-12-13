@@ -19,6 +19,7 @@ from django.conf.urls import include, url
 from . import settings
 from django.conf.urls.static import static
 from django.views.generic import RedirectView
+import notifications.urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,6 +27,7 @@ urlpatterns = [
     path('',RedirectView.as_view(url='/accounts/login/')),
     path('users/',include('products.urls', namespace="products"), name="products"),
     path('accounts/', include('allauth.urls')),
+    path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
     
 ]
 

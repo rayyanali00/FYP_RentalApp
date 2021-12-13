@@ -1,14 +1,14 @@
 import re
 from django.core import paginator
 from django.db.models import query
-from django.http.response import Http404, HttpResponse
+from django.http.response import Http404, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
 from django.views.generic.base import TemplateView, View
 from django.views.generic import ListView,FormView,DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from .models import Category, Product, Sub_Category,Cart, Order
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .forms import CategoryForm,OrderForm,OrderStatusForm,ProductForm
+from .forms import CategoryForm,OrderForm,OrderStatusForm,ProductForm,OrderStatusForm
 from django.http import HttpResponseRedirect
 from django.urls.base import reverse, reverse_lazy
 from django.utils.http import urlencode
@@ -20,16 +20,18 @@ from django.conf import settings
 from django.core.mail import send_mail,EmailMultiAlternatives
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import CartSerializer, ProductSerializer,OrderSerializer
+from .serializers import CartSerializer, ProductSerializer,OrderSerializer,OrderRequestSerializer
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 import uuid
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+from notifications.signals import notify
+from django.contrib.auth import get_user_model
 
 # Create your views here.
-
+User = get_user_model()
 class MainRedirect(LoginRequiredMixin, View):
     def get(self,request, *args, **kwargs):
         print(self.request.user.user_role)
@@ -135,6 +137,7 @@ def get_cart_data(request):
         cart_obj.product_subcategory=request_getdata['prod_sub']
         cart_obj.total_price=request_getdata['total_price']
         cart_obj.quantity = request_getdata['quantity']
+        cart_obj.your_bid_price = request_getdata['your_bid_price']
         cart_obj.order_id = "hello"
         cart_obj.save()
         prod_obj.save()
@@ -147,17 +150,23 @@ class OrderView(LoginRequiredMixin,View):
     def get(self, *args, **kwargs):
         context = {
             'form':self.form_class,
-            'total_amount':self.get_queryset(),
+            'total_amount':self.get_queryset()['total_price'],
+            'total_bid_price':self.get_queryset()['total_bid_price'],
             'success_url':self.get_success_url()
         }
         return render(self.request, 'cart/checkout.html', context)
     
     def get_queryset(self,*args,**kwargs):
-        qs = Cart.objects.filter(user=self.request.user, is_checkout=False).values('total_price')
-        total_price =0
+        qs = Cart.objects.filter(user=self.request.user, is_checkout=False).values('total_price','your_bid_price')
+        context = {
+        "total_price":0,
+        "total_bid_price" :0
+        }
+        print(qs)
         for i in qs:
-            total_price+=i['total_price']
-        return total_price
+            context['total_price']+=i['total_price']
+            context['total_bid_price']+=i['your_bid_price']
+        return context
 
     def get_success_url(self,*args,**kwargs):
         return reverse_lazy('products:order-success')
@@ -167,7 +176,8 @@ def Order_Success(request):
     if request.method == "POST":
         uni_id = uuid.uuid4()
         order_obj = Order.objects.create()
-        cart_obj = Cart.objects.filter(user=request.user).update(is_checkout=True,order_id=uni_id)
+        print(uni_id)
+        cart_obj = Cart.objects.filter(user=request.user,is_checkout=False).update(is_checkout=True,order_id=str(uni_id))
         order_obj.order_id = uni_id
         order_obj.user = request.user
         order_obj.email = request.POST.get('email')
@@ -178,13 +188,22 @@ def Order_Success(request):
         order_obj.state = request.POST.get('state')
         order_obj.city = request.POST.get('city')
         order_obj.zip_code = request.POST.get('zip_code')
+        order_obj.your_bid_total = request.POST.get('your_bid_total')
         order_obj.save()
+        user_obj = User.objects.get(user_role='Admin')
+        print(user_obj)
+        notify.send(request.user, recipient=user_obj, verb='Notification', description=f'Order Request from {request.user.email}')
 
-        subject, from_email, to = 'Booking Confirmed', settings.EMAIL_HOST_USER, request.user.email
-        text_content = 'This is an important message.'
-        html_content = f'<h1>Confirmation Email</h1> <h2>{request.user} your booking has been confirmed<h2>'\
-        f'<a href="http://127.0.0.1:8000/users/order-detail-template/{request.user.id}/{uni_id}"'\
-        f'class="btn btn-primary">Check Details</a>'
+        subject, from_email, to = 'Booking Request', settings.EMAIL_HOST_USER, request.user.email
+        text_content = ''
+        html_content = f'<h1>Booking Request Email</h1> <h2>{request.user} Your booking request has been sent<h2>'
+        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+
+        subject, from_email, to = 'New Booking Request', settings.EMAIL_HOST_USER, settings.EMAIL_HOST_USER
+        text_content = ''
+        html_content = f'<h1>Booking Request Email</h1> <h2>You have received Booking Request from {request.POST.get("email")}<h2> <p><b>Order Id : </b>{uni_id}<p>'
         msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
@@ -214,13 +233,13 @@ def DeleteSingleProduct(request,id):
     
 @login_required
 def checkout_success(request):
-    order_id_obj = Order.objects.filter(user=request.user).first()
-    if order_id_obj.order_id:    
-        context = {
-            'order_id':order_id_obj.order_id
-        }
-        return render(request, 'cart/checkout_success.html', context)
-    return Http404
+    order_id_obj = Order.objects.filter(user=request.user).last()
+    print(order_id_obj.order_id)
+    context = {
+        'order_id':order_id_obj.order_id
+    }
+    print(context)
+    return render(request, 'cart/checkout_success.html', context)
 
 @login_required
 @api_view(['GET'])
@@ -228,9 +247,9 @@ def Order_List(request):
     order_obj = None
     serializer_obj = None
     if request.user.user_role=='Admin':
-        order_obj = Order.objects.all()
+        order_obj = Order.objects.filter(is_accepted='Accept')
     else:
-        order_obj = Order.objects.filter(user=request.user)    
+        order_obj = Order.objects.filter(user=request.user, is_accepted='Accept')    
     serializer_obj = OrderSerializer(order_obj, many=True)
     return Response(serializer_obj.data)
 
@@ -238,6 +257,54 @@ def Order_List(request):
 def OrderListTemplate(request):
     return render(request, 'orders/orders_list.html')
 
+@login_required
+@api_view(['GET'])
+def Order_Request(request):
+    order_obj = None
+    serializer_obj = None
+    order_obj = Order.objects.filter(is_accepted='Pending')
+    serializer_obj = OrderRequestSerializer(order_obj, many=True)
+    return Response(serializer_obj.data)
+
+
+@login_required
+def OrderRequestTemplate(request):
+    if request.user.user_role=='Admin':
+        return render(request, 'orders/order_requests_list.html')
+    return Http404
+
+@login_required
+def OrderRequestForm(request):
+    context = {
+        "form":OrderStatusForm(),
+        "order_id":request.GET.get('order_id'),
+        "email":request.GET.get('email')
+    }
+    return render(request,'orders/order_request_form.html',context)
+
+def OrderRequestStatus(request):
+    if request.method == "POST":
+        form = OrderStatusForm(request.POST)
+        if form.is_valid():
+            order_obj = Order.objects.filter(order_id=request.POST.get('order_id')).update(is_accepted=form.cleaned_data.get('is_accepted'))
+            if form.cleaned_data.get('is_accepted') == "Accept":
+                subject, from_email, to = 'Order Accepted', settings.EMAIL_HOST_USER, request.POST.get('email')
+                text_content = ''
+                html_content = f'<h1>Order Accepted</h1> <h2>Your order request has been accepted<h2> <h3>Order Id : {request.POST.get("order_id")}</h3> <h3>Your order will be delievered at your provided delievery date</h3>'
+                msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()
+            else:
+                subject, from_email, to = 'Order Rejected', settings.EMAIL_HOST_USER, request.POST.get('email')
+                text_content = ''
+                html_content = f'<h1>Order Accepted</h1> <h2>Unfortunately, we can not accept your order, since your bid price is low<h2> <h3>Order Id : {request.POST.get("order_id")}</h3> <h3>You can place your order by placing another bid</h3>'
+                msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()
+
+            return HttpResponseRedirect(reverse_lazy('products:order-request-template'))
+        return HttpResponseBadRequest
+    
 @login_required
 def OrderDetailTemplate(request,pk,order_id):
     context = { 'order_id':order_id,'pk':pk }
@@ -247,11 +314,13 @@ def OrderDetailTemplate(request,pk,order_id):
 @api_view(['GET'])
 def OrderDetailApi(request,pk,order_id):
     if request.user.user_role=='Admin':
-        cart_obj = Cart.objects.filter(user=pk, is_checkout=True,user__order__status="Pending",user__order__order_id=order_id)
+        print(type(order_id))
+        cart_obj = Cart.objects.filter(user=pk, is_checkout=True,user__order__status="Pending",order_id=order_id)
     else:
-        cart_obj = Cart.objects.filter(user=request.user, is_checkout=True,user__order__status="Pending",user__order__order_id=order_id)
+        cart_obj = Cart.objects.filter(user=request.user, is_checkout=True,user__order__status="Pending",order_id=order_id)
     serializer_obj = CartSerializer(cart_obj, many=True)
     return Response(serializer_obj.data)
+
 
 @login_required
 def OrderStatusUpdate(request):

@@ -24,7 +24,7 @@ class OrderForm(ModelForm):
                                 required=True)
     class Meta:
         model = models.Order
-        fields = ["address","email","total_amount","deliever_at","country","state","city","zip_code"]
+        fields = ["address","email","total_amount","deliever_at","country","state","city","zip_code",'your_bid_total']
         required = "__all__"
 class OrderStatusForm(ModelForm):
     class Meta:
@@ -35,3 +35,8 @@ class ProductForm(ModelForm):
     class Meta:
         model = models.Product
         exclude = ["timePeriod"]
+        
+class OrderStatusForm(ModelForm):
+    class Meta:
+        model=models.Order
+        fields=['is_accepted']

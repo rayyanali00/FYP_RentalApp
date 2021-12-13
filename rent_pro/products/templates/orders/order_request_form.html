@@ -1,0 +1,24 @@
+{% extends 'base.html' %} {% block body %}
+<div class="row">
+    <div class="col-lg-4 mx-auto">
+        <div class="card prod-card">
+            <div class="card-header">
+                <h4>Order Request Status</h4>
+            </div>
+            <div class="card-body">
+                <form action="{% url 'products:order-request-status' %}" method="post">
+                    {% csrf_token %}
+                    <label for="order_request">Order Request Status</label> {{form.is_accepted}}
+                    <input type="hidden" name="order_id" value="{{order_id}}">
+                    <input type="hidden" name="email" value="{{email}}">
+                    <button type="submit" class="mt-2 mx-auto btn btn-success">Update Request</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $("input,select").addClass("form-control col-lg-6")
+</script>
+{% endblock %}

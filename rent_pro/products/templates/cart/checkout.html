@@ -16,7 +16,14 @@
                         <label for="address">Shipping Address</label> {{form.address}}
                     </div>
                     <div class="form-group">
-                        <label for="total_amount">Total Amount</label> {{form.total_amount}}
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <label for="total_amount">Total Amount</label> {{form.total_amount}}
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="total_bid_price">Total Bid Price</label> {{form.your_bid_total}}
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="country">Country</label> {{form.country}}
@@ -55,8 +62,9 @@
     date = date > 10 ? date : '0' + date
     dt = dt.getFullYear() + '-' + mn + '-' + date
     $("#id_email").val("{{user.email}}")
-    $("#id_email, #id_total_amount").attr("readonly", true)
+    $("#id_email, #id_total_amount, #id_your_bid_total").attr("readonly", true)
     $("#id_total_amount").val("{{total_amount}}")
+    $("#id_your_bid_total").val("{{total_bid_price}}")
     $("#id_deliever_at").removeAttr("type")
     $("#id_deliever_at").attr("type", "date")
     $("input,select").addClass("form-control")

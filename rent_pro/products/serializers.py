@@ -38,6 +38,10 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = "__all__"
         
+class OrderRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ['order_id','email','ordered_at','total_amount','your_bid_total','user']
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart

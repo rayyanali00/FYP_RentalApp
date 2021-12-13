@@ -31,6 +31,11 @@ urlpatterns = [
     path('update-product/<int:pk>',views.UpdateProduct.as_view(), name="update-product"),
     # path('test/<str:id>/',views.test_view, name="test-view"),
     
+    path('order-request-template/',views.OrderRequestTemplate, name="order-request-template"),
+    path('order-request-api/',views.Order_Request, name="order-request-api"),
+    
+    path('order-request-form/',views.OrderRequestForm, name="order-request-form"),
+    path('order-request-status/',views.OrderRequestStatus, name="order-request-status"),
     
     #unused
     path('api-overview/', views.api_overview, name="api-overview"),

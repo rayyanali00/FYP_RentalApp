@@ -32,6 +32,7 @@
                 <th>SubCategory</th>
                 <th>Quantity</th>
                 <th>Total Price</th>
+                <th>Bid Price</th>
             </tr>
         </thead>
 
@@ -62,7 +63,15 @@
     }, {
         "data": "quantity"
     }, {
-        "data": "total_price"
+        "data": "total_price",
+        "render": function(data, type) {
+            return data + " PKR"
+        }
+    }, {
+        "data": "your_bid_price",
+        "render": function(data, type) {
+            return data + " PKR"
+        }
     }, ]
 
     loadRecordsInDataTable(dateCol, expArr, apiUrl, responseArrCols, tableId);

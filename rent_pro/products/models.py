@@ -49,6 +49,7 @@ class Cart(models.Model):
     product_category = models.CharField(max_length=255,null=False, blank=False)
     product_subcategory = models.CharField(max_length=255,null=False, blank=False)
     total_price = models.IntegerField(null=True, blank=True)
+    your_bid_price = models.IntegerField(null=True, blank=True)
     is_checkout = models.BooleanField(default=False)
     quantity = models.IntegerField(null=True)
     
@@ -63,6 +64,12 @@ class Order(models.Model):
         ("Delievered","delievered"),
         ("Out for delievery","out for delievery")
         )
+    
+    REQUEST_STATUS = (
+        ("Pending","pending"),
+        ("Accept","accept"),
+        ("Reject","reject")
+        )
 
     order_id = models.CharField(max_length=255, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
@@ -76,7 +83,8 @@ class Order(models.Model):
     state = models.CharField(max_length=255,null=True,blank=True)
     city = models.CharField(max_length=255,null=True,blank=True)
     zip_code = models.CharField(max_length=255,null=True,blank=True)
-
+    your_bid_total = models.IntegerField(null=True, blank=True) 
+    is_accepted = models.CharField(max_length=30,null=False,blank=False, choices=REQUEST_STATUS, default="Pending")
     
     def __str__(self):
         return str(self.order_id)
