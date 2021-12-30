@@ -62,8 +62,9 @@
                                     <th>Zip Code</th>
                                     <th>Ordered At</th>
                                     <th>Deliever At</th>
-                                    <th>Status</th>
+                                    <th>Delievery Status</th>
                                     <th>Detail</th>
+                                    <th>Process Payment</th>
 
                                 </tr>
                             </thead>
@@ -87,7 +88,10 @@
                         }, {
                             "data": "email"
                         }, {
-                            "data": "total_amount"
+                            "data": "your_bid_total",
+                            "render": function(data, type, row) {
+                                return 'pkr ' + data;
+                            }
                         }, {
                             "data": "country"
                         }, {
@@ -142,7 +146,13 @@
                                 let url_mask = "{% url 'products:order-detail-template' 123 456 %}".replace('123', data).replace('456', row.order_id);
                                 return '<a href=' + url_mask + '>Details</a>'
                             }
-                        }]
+                        }, {
+                            "data": "payment_process",
+                            "render": function(data, type, row) {
+                                return data.charAt(0).toUpperCase() + data.slice(1);
+
+                            }
+                        }];
 
                         loadRecordsInDataTable(dateCol, expArr, apiUrl, responseArrCols, tableId);
                     </script>

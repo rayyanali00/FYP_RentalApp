@@ -28,6 +28,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Stripe configuration key
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51KC4VhKMoLpHmhyXqxoq6ZmGDw2XWUH70oy6VZHihuapR3Z9bjUnpfOeNFDCwjmaRYHvPo0uuwpmFC3QBGiWrCjR00tTcVohWL'
+STRIPE_PRIVATE_KEY = 'sk_test_51KC4VhKMoLpHmhyXwPIAVJk4iV5E8lt5tnny1wvwyRBd3ApK8YMw05ivn6RhnqCwtIA9v7DmU6VYQoQlvgFImvXh00CUVVw602'
 
 # Application definition
 
@@ -44,6 +47,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'crispy_forms',
     'products.apps.ProductsConfig',
+    'payments.apps.PaymentsConfig',
     'corsheaders',
     'rest_framework',
 

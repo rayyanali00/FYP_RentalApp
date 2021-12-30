@@ -70,6 +70,10 @@ class Order(models.Model):
         ("Accept","accept"),
         ("Reject","reject")
         )
+    PAYMENT_STATUS = (
+    ("pending","Pending"),
+    ("received","Received"),
+    )
 
     order_id = models.CharField(max_length=255, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
@@ -85,6 +89,7 @@ class Order(models.Model):
     zip_code = models.CharField(max_length=255,null=True,blank=True)
     your_bid_total = models.IntegerField(null=True, blank=True) 
     is_accepted = models.CharField(max_length=30,null=False,blank=False, choices=REQUEST_STATUS, default="Pending")
+    payment_process = models.CharField(max_length=30,null=False,blank=False, choices=PAYMENT_STATUS, default="pending")
     
     def __str__(self):
         return str(self.order_id)

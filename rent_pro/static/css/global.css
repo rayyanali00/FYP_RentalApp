@@ -1,0 +1,146 @@
+/**
+* The CSS shown here will not be introduced in the Quickstart guide, but
+* shows how you can use CSS to style your Element's container.
+*/
+body{
+  background-color: rgba(0, 130, 255, 0.04);
+  
+}
+input,
+.StripeElement {
+  height: 5%;
+  padding: 5px 8px;
+  width: 90%;
+
+  color: #32325d;
+  background-color: rgba(255, 255, 255, 0.756);
+  border: 1px solid transparent;
+  border-radius: 4px;
+
+  box-shadow: 0 5px 3px 0 #e6ebf1;
+  -webkit-transition: box-shadow 150ms ease;
+  transition: box-shadow 150ms ease;
+  /* margin: 15px auto; */
+}
+
+input:focus,
+.StripeElement--focus{
+  box-shadow: 0 1px 3px 0 #cfd7df;
+  border-bottom: 1px solid gray;
+}
+
+input, .StripeElement{
+  padding: 10px 10px;
+}
+
+input:focus{
+ outline: none;
+ border-bottom: 1px solid gray;
+}
+
+.StripeElement--invalid {
+  border-color: #fa755a;
+}
+
+.StripeElement--webkit-autofill {
+  background-color: #fefde5 !important;
+}
+.card { 
+  margin: 10px auto;
+  width: 20%;
+  background-color: #fff;
+  box-shadow: 0 0 20px rgb(0 0 0 / 30%);;
+  padding: 10px 20px;
+}
+
+/* .taiji-logo{
+  height: 30%;
+  width: 35%;
+  margin: 0 auto;
+  vertical-align: middle;
+} */
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: gray;
+  opacity: 0.6; /* Firefox */
+}
+#submit_payment{
+  background-color: #00AEEF;
+  color: white;
+  font-size: 18px;
+  font-family: muli,sans-serif;
+  border: none;
+}
+
+#submit_payment:focus{
+  outline: none;
+  box-shadow: none;
+}
+.meeting-details
+{
+  font-size: 100%;
+  font-weight: lighter;
+  font-family: muli,sans-serif;
+}
+.detail{
+  font-weight:600;
+}
+.zoom_link{
+  color: #00AEEF;
+}
+.zoom_link:hover{
+  color: #00AEEF;
+  /* font-weight: bold; */
+}
+.zoom_link_copy{
+  background-color: #00AEEF;
+  color: white;
+}
+#a-link {
+  border-top: 3px solid #ab373a;
+}
+
+#g-link {
+  border-top: 3px solid #d53900;
+}
+
+#y-link {
+  border-top: 3px solid #65106e;
+}
+
+#o-link {
+  border-top: 3px solid #fa9d00;
+}
+.input-container {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  width: 100%;
+  margin-bottom: 15px;
+}
+.pay-details{
+  border: 0px solid green;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgb(0 0 0 / 30%);
+}
+.main-logo>img {
+  width: 80%;
+  margin: auto;
+}
+.g-recaptcha iframe {
+  max-width: 100% !important;
+  transform:scale(0.77) !important;
+  -webkit-transform:scale(0.77) !important;
+  transform-origin: center center !important;
+  -webkit-transform-origin: center center !important;
+margin-left:5px;
+}
+#rc-imageselect {
+  transform:scale(0.77) !important;
+  -webkit-transform:scale(0.77) !important;
+  transform-origin:0 0 !important;
+  -webkit-transform-origin:0 0 !important;
+}
+.check{
+  width: 14px !important;
+  box-shadow: none !important;
+}

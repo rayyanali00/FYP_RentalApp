@@ -1,0 +1,224 @@
+{% extends 'base.html' %} {% load static %} {% block css %}
+<!-- <link rel="stylesheet" href="{% static 'css/global.css' %}" /> -->
+<style>
+    #terms_and_conditions {
+        height: 15px !important;
+    }
+</style>
+{% endblock %} {% block js %}
+<script src="https://js.stripe.com/v3/"></script>
+<script src="{% static 'js/client.js' %}" defer></script>
+<script type="text/javascript">
+    var onloadCallback = function() {
+        grecaptcha.render('g-recaptcha', {
+            'sitekey': '6Ld-QdwdAAAAACnUuRx7EPkFiDf_PAauxsJMkkRd'
+        });
+    };
+</script>
+<script>
+    $(document).ready(function() {
+        $('[name="expiry_date"]').bind('keyup', 'keydown', function(event) {
+            var inputLength = event.target.value.length;
+            if (event.keyCode != 4) {
+                if (inputLength === 2) {
+                    var thisVal = event.target.value;
+                    thisVal += '/';
+                    $(event.target).val(thisVal);
+                }
+            }
+        })
+    });
+    // JavaScript function that enables or disables a submit button depending
+    // on whether a checkbox has been ticked or not.
+    function terms_changed(termsCheckBox) {
+        //If the checkbox has been checked
+        if (termsCheckBox.checked) {
+            //Set the disabled property to FALSE and enable the button.
+            document.getElementById("submit_payment").disabled = false;
+        } else {
+            //Otherwise, disable the submit button.
+            document.getElementById("submit_payment").disabled = true;
+        }
+    };
+
+    var stripe = Stripe("pk_test_51KC4VhKMoLpHmhyXqxoq6ZmGDw2XWUH70oy6VZHihuapR3Z9bjUnpfOeNFDCwjmaRYHvPo0uuwpmFC3QBGiWrCjR00tTcVohWL");
+    var elements = stripe.elements();
+</script>
+
+{% endblock %} {% block body %}
+
+
+<div class="wrapper-background">
+    <div class="container-fluid form-page d-flex justify-content-center align-items-center">
+        <!-- <video autoplay="" id="videoBG" loop muted=""><source src="{% static 'dashboard/images/ai_hub.mp4' %}" type="video/mp4" /></video> -->
+        <div class="form-bg">
+            <div class="container">
+                <div class="row d-flex align-items-center justify-content-center">
+                    <div class="form-horizontal col-10 col-md-6 col-lg-12">
+                        <div class="alert alert-danger alert-dismissible fade show d-none" role="alert" id="card-errors">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+                        </div>
+                        <div class="mb-4">
+                            <!-- <img src="{% static 'dashboard/images/taiji-logo.png' %}" style="width: 65%;"> -->
+                        </div>
+                        <h5 class="heading">Payment Details</h5>
+                        <!-- <img class="img-responsive cc-img" style="margin: 0 auto;" src="http://www.prepbootstrap.com/Content/images/shared/misc/creditcardicons.png"> -->
+                        <form role="form" method='post' action="{% url 'payments:charge-user' %}" id="payment-form">
+                            {% csrf_token %}
+                            <!-- <input type="hidden" value="{{ObjectId}}" name="ObjectId">
+                            <input type="hidden" value="{{idempotency_key}}" name="idempotency_key"> -->
+                            <input type="email" value="{{email}}" name="email">
+                            <input type="text" value="{{name}}" name="name">
+                            <input type="text" value="{{your_bid_total}}" name="amount">
+
+                            <div id="card-element">
+                                <!-- A Stripe Element will be inserted here. -->
+                            </div>
+                            <div id="g-recaptcha" data-sitekey="6Ld-QdwdAAAAACnUuRx7EPkFiDf_PAauxsJMkkRd"></div>
+                            <div class="T&C my-3">
+                                <input type="checkbox" id="terms_and_conditions" class="check mt-1" value="1" onclick="terms_changed(this)">
+                                <label for="terms_and_conditions" class="d-inline ml-1">I agree to the <a data-toggle="modal" data-target="#terms" class="terms-link"> Terms of Service</a></label>
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Terms and Condition
+  </button>
+                            </div>
+
+                            <div>
+                                <button id="submit_payment" class="btn btn-main my-3" name='payment-button' value=1 disabled>Process Payment</button>
+                            </div>
+
+                        </form>
+                        <!-- ALERT MESSAGES -->
+                        {% if messages %} {% for message in messages %}
+                        <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+                            {{message}}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                        </div>
+                        {% endfor %} {% endif%}
+                        <!-- end of alerts -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <strong>GENERAL: </strong>As designated on this Agreement, the individual has joined Solace New York’s virtual platform named Solace Virtual in the capacity of “Member.” Solace New York reserves the right to add or eliminate services
+                    to Solace Virtual when deemed necessary or desirable in its sole discretion. The information on this Agreement is the property of Solace New York and its subsidiaries. Membership does not confer on member any ownership interest in
+                    Solace New York or any of its property.
+                    <br><br>
+
+                    <strong>MEMBER COMMUNICATION: </strong>Solace New York expressly reserves the right to contact the Member through various communication media including, but not limited to telephone, cellular phone, text messaging, email, mail, or
+                    any other medium as it may become available. This provision shall survive the termination of this Agreement.
+                    <br><br>
+
+                    <strong>RULES AND REGULATIONS: </strong>Member acknowledges the existence of and the need for rules, regulations and policies governing access to Solace New York’s intellectual property and participation in its programs and services.
+                    Member agrees to comply with the Rules and Regulations as presently in effect or as they may hereinafter be modified, amended or supplemented. Solace New York reserves the right to modify, amend or supplement the Rules and Regulations
+                    from time to time in its sole discretion. Solace New York may cancel Member’s membership at any time for breach of the Rules and Regulations or generally undesirable behavior as determined by Solace New York in its sole discretion,
+                    and Member will not be entitled to a refund of any portion of initiation fees or dues paid to the date of cancellation.
+                    <br><br>
+
+                    <strong>BUYER&#39;S RIGHT TO CANCEL: </strong>Solace Virtual Memberships are billed monthly beginning with the date of Membership initiation. Memberships have no commitment and the Member may cancel their membership at any time by
+                    logging into the Solace Virtual portal. No refunds (in total or pro-rated) will be issued for unused or partially used services. NOTICE: ANY HOLDER OF THIS CONTRACT IS SUBJECT TO ALL CLAIMS AND DEFENSES, WHICH THE DEBTOR COULD ASSERT
+                    AGAINST. THE SELLER OF GOODS OR SERVICES OBTAINED WITH THE PROCEEDS HEREOF, RECOVERY HEREUNDER BY THE DEBTOR. SHALL NOT EXCEED AMOUNTS PAID BY THE DEBTOR HEREUNDER.
+                    <br><br>
+
+                    <strong>PAYMENT DEFAULT: </strong>If Member fails to pay any amount when due under this Agreement, Solace New York shall be entitled, at any time in its sole discretion, to suspend or cancel Member’s membership and to require Member
+                    to immediately pay all past due balances. Member agrees to pay a late charge fee of $20.00 as well as any other charges allowed by law for any EFT or credit card charge not honored by a Member’s bank or credit card company. Suspension
+                    or cancellation shall not relieve Member from the obligation to pay any unpaid balances. Any payments owing from Member to Solace New York that are not received when due shall bear interest at the highest rate permitted by law. If
+                    Member fails to pay any amount due to Solace New York when due, Member shall pay all costs and expenses of collection incurred by Solace New York, including reasonable attorney’s fees and expenses.
+                    <br><br>
+
+                    <strong>HEALTH REPRESENTATIONS AND AGREEMENTS: </strong>Member represents and warrants to Solace New York that Member is in good physical condition and has no medical reason or impairment that could prevent Member from his or her intended
+                    use of the Solace Virtual platform. Member acknowledges that Solace New York has no expertise in diagnosing or treating medical conditions, has not given Member any medical advice before Member joined Solace Virtual and cannot give
+                    Member any such advice after Member joins Solace Virtual, whether related to Member’s physical condition and ability to use the services of Solace Virtual or otherwise. Member acknowledges and agrees that Member will discuss any health
+                    or medical concerns with Member’s physician or other health care professional before using Solace Virtual’s services, whether Member is generally in good health or has a history of health issues.
+                    <br><br>
+
+                    <strong>WAIVER OF LIABILITY; ASSUMPTION OF RISK: </strong>Member acknowledges that the use of Solace New York’s Solace Virtual platform involves an inherent risk of personal injury to Member and Member’s guests and invitees. Member
+                    voluntarily agrees to assume all risks, known and unknown, for all likely and unlikely, reasonably and unreasonably expected personal injury to Member, Member’s spouse, children, unborn children, other family members, guests or invitees
+                    and waives any and all claims or actions that Member may have against Solace New York, any subsidiaries or other affiliates and any respective officers, directors, employees, agents, successors and assigns for any such personal injury
+                    (and no such person shall be liable to Member, Member’s spouse, children, unborn children, other family members, guests or invitees for any such personal injury), including, without limitation (i) injuries arising from use of any exercise
+                    equipment, equipment which may malfunction or break, whether properly or improperly maintained, (ii) injuries arising from participation in supervised or unsupervised activities, personal training and programs in exercise rooms, or
+                    in online sessions or classes, (iii) injuries or medical disorders resulting from exercising with the Solace Virtual platform, including but not limited to heart attacks, strokes, heat stress, sprains, broken bones and torn or damaged
+                    muscles, ligaments or tendons, (iv) Solace New York negligent hiring or negligent retention of any employee. Member acknowledges that (x) Solace New York does not manufacture any of the fitness or other equipment recommended for classes
+                    and (y) Solace New York does not manufacture any vitamins, food products, sports drinks, nutritional supplements or other products that may be referenced in the Solace Virtual platform; accordingly, Solace New York or any Solace New
+                    York any subsidiaries or other affiliates nor any respective officers, directors, employees, agents, successors or assigns shall be held liable for any such defective equipment or products. Member shall indemnify each of this Solace
+                    New York, any subsidiaries or other affiliates and any respective officers, directors, employees, agents, successors and assigns (an “Indemnified Party”) and save and hold each of them harmless against and pay on behalf of or reimburse
+                    any such Indemnified Party as and when incurred for any Losses which such Indemnified Party may suffer, sustain or become subject to, as a result of, in connection with, relating to or incidental to by virtue of any claim that is the
+                    subject of the waiver set forth above. The provisions of this paragraph shall survive the termination of this Agreement and Member’s membership.
+                    <br><br>
+
+                    <strong>MEDIA RELEASE: </strong>Member agrees to grant permission to Solace New York to use varying media of them as obtained from within the Solace Virtual platform, and grant to Solace New York all rights, titles, and interests in
+                    all media. The Member understands that notice may not be given of the specific use of my image or video and no compensation will be provided for the media use.
+                    <br><br>
+
+                    <strong>PRIVACY POLICY:  </strong>Solace New York will collect members&#39; date of birth, place of residence (country, state, zip code), gender, and phone number for internal use only. The information will not be sold or shared with
+                    any 3rd parties.
+                    <br><br>
+
+
+
+                    <strong>DISPUTES; ARBITRATION: </strong>Member agrees that any dispute or claim relating in any way to Member’s use of any recommended equipment, programs, personal training instruction, classes, activities, and/or any other services
+                    or events provided by, or sponsored by, any health and fitness club or online platform owned, operated, or by any Solace New York entity (collectively, the “Club Facilities”) (whether supervised or unsupervised and whether on or off
+                    such club’s premises), or in any way related to Member’s membership in such club will be resolved by binding arbitration rather than in court, except that Member may assert claims in small claims court if such claims quality. The federal
+                    Arbitration Act (as amended) and federal arbitration law apply to this Agreement. There is no judge or jury in arbitration and court review of an arbitration award is limited. However, an arbitration can award on an individual basis
+                    the same damages and relief as a court (including injunctive and declaratory relief or statutory damages) and must follow the terms of this Agreement as a court would. To begin an arbitration proceeding, Member must send a letter (via
+                    certified mail, return receipt requested, or via reputable overnight courier, in each case postage prepaid), addressed to Solace New York, 38 E. 32nd St., New York, NY 10016, Attention: Registered Agent, requesting arbitration and
+                    describing Member’s claim. The arbitration shall be conducted by the American Arbitration Association (“AAA”) under its rules. The AAA’s rules are available at www.adr.org or by calling 800- 778-7879. Member and each Solace New York
+                    party each agree to pay his/her/its own fees and costs relating to the arbitration. Member understands and agrees that the initial payment to commence an arbitration will be paid by Member, and that Solace New York will reimburse such
+                    filing fee if Member is eventually successful in Member’s arbitration proceeding. Payment of all filing and arbitrator fees will be governed by the AAA’s rules. Member and each Solace New York Party each agree that any dispute resolution
+                    proceeding will be conducted only on an individual basis and not in a class-action, class-wide, or consolidated basis, or representative action. There shall be no right or authority for any claims to be arbitrated on a class-action,
+                    class-wide, or consolidated basis or representative action whatsoever, and Member understands that Member is waiving any right to proceed in a class action, class-wide, or consolidated basis or representative action, whether within
+                    or outside of arbitration, and understands that all claims regarding Member’s relationship with a Solace New York Party are governed solely on an individual basis in arbitration. If for any reason a claim proceeds in court rather in
+                    arbitration, Member and each Solace New York Party each waive his/her/its right to a jury trial. In the event of a conflict between this paragraph and any other section of this Agreement, the terms and provisions of this paragraph
+                    shall govern.
+                    <br><br>
+
+                    <strong>HEALTH REPRESENTATIONS AND AGREEMENTS: </strong>Member represents and warrants to Solace New York that Member is in good physical condition and has no medical reason or impairment that could prevent Member from his or her intended
+                    use of Solace Virtual. Member acknowledges that Solace New York has no expertise in diagnosing or treating medical conditions, has not given Member any medical advice before Member joined Solace Virtual and cannot give Member any such
+                    advice after Member joins Solace Virtual, whether related to Member’s physical condition and ability to use the facilities and services of Solace Virtual or otherwise. Member acknowledges and agrees that Member will discuss any health
+                    or medical concerns with Member’s physician or other health care professional before using Solace Virtual’s services, whether Member is generally in good health or has a history of health issues.
+                    <br><br>
+
+                    <strong>MISCELLANEOUS: </strong>This Agreement shall be governed by the internal laws of the State of New York without regard to principles of conflicts of laws, (ii) The New York Department of Consumer Services, Office of Consumer
+                    Affairs regulates health spas in the Commonwealth pursuant to the provisions of the New York Health Club Act. However, the buyer should first attempt to resolve with the health club any complaint the buyer has regarding the health
+                    club, (iii) this Agreement shall be binding upon and inure to the benefit of the parties hereto and their respective heirs, successors and permitted assigns, (iv) this Agreement and the rights and obligations hereunder shall not be
+                    assignable or transferable by Member without the prior written consent of Solace New York. Consent may be withheld in Solace New York absolute discretion, (v) if any term or provisions of this Agreement is declared to be illegal, invalid
+                    or unenforceable for any reason whatsoever by a court of competent jurisdiction, the illegality, invalidity or unenforceability shall not affect the validity of the remainder of this Agreement, and to the extent permitted by applicable
+                    laws, any such term or provision shall be restricted in applicability or reformed to the minimum extent for such to be enforceable and (vi) all notices permitted or required to be given to Solace New York hereunder shall be submitted
+                    to Solace New York by email to <u>support@inqline.com</u>.
+                    <br><br> Do not sign this Agreement until you have read it in its entirety. The terms on this form are an important part of this Agreement. Member is entitled to a completely copy of this Agreement. By signing this Agreement, Member
+                    acknowledges that (A) This Agreement is a contract that will become legally binding upon its acceptance by Solace New York (B) Solace New York makes no representations or warranties to Member, either expressed or implied, except to
+                    the extent expressly set forth in this Agreement, (C) this Agreement constitutes the entire agreement between the parties hereto with respect to the subject matter hereof and supersedes any and all prior agreements, written or oral,
+                    with respect to the subject matter.
+
+                    <br><br> I, [buyer], being of legal age and sound mental competency, agree to these terms and agree to the legal liability that may incur against these terms.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer>
+</script>
+{% endblock %}

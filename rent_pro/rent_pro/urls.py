@@ -26,6 +26,8 @@ urlpatterns = [
     path('accounts/',include('users.urls', namespace="users"), name="users"),
     path('',RedirectView.as_view(url='/accounts/login/')),
     path('users/',include('products.urls', namespace="products"), name="products"),
+    path('payments/',include('payments.urls', namespace="payments"), name="payments"),
+
     path('accounts/', include('allauth.urls')),
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
     

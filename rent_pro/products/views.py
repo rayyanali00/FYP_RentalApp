@@ -177,7 +177,7 @@ def Order_Success(request):
         uni_id = uuid.uuid4()
         order_obj = Order.objects.create()
         print(uni_id)
-        cart_obj = Cart.objects.filter(user=request.user,is_checkout=False).update(is_checkout=True,order_id=str(uni_id))
+        cart_obj = Cart.objects.filter(user=request.user,is_checkout=False).update(is_checkout=True,order_id=uni_id)
         order_obj.order_id = uni_id
         order_obj.user = request.user
         order_obj.email = request.POST.get('email')
@@ -290,7 +290,7 @@ def OrderRequestStatus(request):
             if form.cleaned_data.get('is_accepted') == "Accept":
                 subject, from_email, to = 'Order Accepted', settings.EMAIL_HOST_USER, request.POST.get('email')
                 text_content = ''
-                html_content = f'<h1>Order Accepted</h1> <h2>Your order request has been accepted<h2> <h3>Order Id : {request.POST.get("order_id")}</h3> <h3>Your order will be delievered at your provided delievery date</h3>'
+                html_content = f'<h1>Order Accepted</h1> <h2>Your order request has been accepted<h2> <h3>Order Id : {request.POST.get("order_id")}</h3> <h3>Please complete your payment details, so we can deliever your order at your door step</h3><h5>Here is the link for payment process</h5>'
                 msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
                 msg.attach_alternative(html_content, "text/html")
                 msg.send()
@@ -314,10 +314,9 @@ def OrderDetailTemplate(request,pk,order_id):
 @api_view(['GET'])
 def OrderDetailApi(request,pk,order_id):
     if request.user.user_role=='Admin':
-        print(type(order_id))
-        cart_obj = Cart.objects.filter(user=pk, is_checkout=True,user__order__status="Pending",order_id=order_id)
+        cart_obj = Cart.objects.filter(user=pk, is_checkout=True,order_id=order_id)
     else:
-        cart_obj = Cart.objects.filter(user=request.user, is_checkout=True,user__order__status="Pending",order_id=order_id)
+        cart_obj = Cart.objects.filter(user=request.user, is_checkout=True,order_id=order_id)
     serializer_obj = CartSerializer(cart_obj, many=True)
     return Response(serializer_obj.data)
 
