@@ -49,7 +49,7 @@ def charge_user(request):
             msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
             msg.attach_alternative(html_content, "text/html")
             msg.send()
-            order_obj = Order.objects.get(order_id=request.POST.get('order_id')).update(payment_process="received")
+            order_obj = Order.objects.get(order_id=request.POST.get('order_id')).update(payment_process="Received")
         except stripe.error.CardError as e:
             messages.warning(request, e.user_message)
     return redirect(reverse('payments:payment-success'))
