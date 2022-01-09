@@ -37,8 +37,13 @@ urlpatterns = [
     path('order-request-form/',views.OrderRequestForm, name="order-request-form"),
     path('order-request-status/',views.OrderRequestStatus, name="order-request-status"),
     
+    path('send-return-email/',views.SendReturnEmailList, name="send-return-email"),
+    path('items-list/',views.ItemListApi, name='item-list-api'),
+    path('send-email-form/',views.SendEmailForm, name='send-email-form'),
+    path('send-email/', views.SendReturnEmail, name='send-email'),
+    
     #unused
-    path('api-overview/', views.api_overview, name="api-overview"),
+    # path('api-overview/', views.api_overview, name="api-overview"),
     path('product-api/',views.Order_List, name="product-api"),
     path('product-detail/<str:pk>/',views.products_api, name="product-detail"),
 ]

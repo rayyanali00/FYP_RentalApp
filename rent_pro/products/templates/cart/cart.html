@@ -53,18 +53,28 @@
 <h1 class="text-center">No Items Found In Cart</h1>
 {% endif %}
 <script>
-    let price = document.querySelectorAll(".price")
-    let bid_price = document.querySelectorAll(".bid_price")
-    let total_price = 0;
-    let bid_total = 0;
-    for (var i = 0; i < price.length; i++) {
-        total_price += Number(price[i].textContent)
-    }
-    for (var j = 0; j < bid_price.length; j++) {
-        console.log(bid_price[j].textContent)
-        bid_total += Number(bid_price[j].textContent)
-    }
-    $(".total_price").text(total_price)
-    $(".bid_total_price").text(bid_total)
+    $(document).ready(function() {
+        let price = document.querySelectorAll(".price")
+        let bid_price = document.querySelectorAll(".bid_price")
+        let total_price = 0;
+        let bid_total = 0;
+        for (var i = 0; i < price.length; i++) {
+            total_price += Number(price[i].textContent)
+        }
+        for (var j = 0; j < bid_price.length; j++) {
+            console.log(bid_price[j].textContent)
+            bid_total += Number(bid_price[j].textContent)
+        }
+        $(".total_price").text(total_price)
+        $(".bid_total_price").text(bid_total)
+
+        function preventBack() {
+            window.history.forward();
+        }
+        window.onunload = function() {
+            null;
+        };
+        setTimeout("preventBack()", 0);
+    })
 </script>
 {% endblock %}

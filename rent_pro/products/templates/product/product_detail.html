@@ -49,6 +49,7 @@
         total_price: parseFloat($(".price").text()),
         quantity: 1,
         your_bid_price: 0,
+        days: 1
     }
     let timepr;
     let quantity;
@@ -67,6 +68,7 @@
         prod_price = (orig_price * timepr) * quantity
         $(".price").text(prod_price)
         prod_dict['total_price'] = prod_price
+        prod_dict['days'] = timepr
         if (parseInt($(".timeperiod").text()) > 1) {
             $(".sub-time").removeClass("d-none")
         } else {
@@ -85,6 +87,7 @@
         prod_price = (prod_price - orig_price) * quantity
         $(".price").text(prod_price)
         prod_dict['total_price'] = prod_price
+        prod_dict['days'] = timepr
         if (parseInt($(".timeperiod").text()) > 1) {
             $(".sub-time").removeClass("d-none")
         } else {

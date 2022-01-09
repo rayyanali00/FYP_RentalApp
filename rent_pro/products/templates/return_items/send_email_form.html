@@ -1,0 +1,28 @@
+{% extends 'base.html' %} {% block body %}
+<div class="row">
+    <div class="col-lg-4 mx-auto">
+        <div class="card prod-card">
+            <div class="card-header">
+                <h4>Send Return Email</h4>
+            </div>
+            <div class="card-body">
+                <form action="{% url 'products:send-email' %}" method="post">
+                    {% csrf_token %}
+                    <label for="order_request">Send Return Email</label>
+                    <input type="text" readonly name="product_id" value="{{id}}">
+                    <input type="email" readonly name="email" value="{{email}}" id="">
+                    <input type="text" readonly name="category" value={{product_category}}>
+                    <input type="text" readonly name="sub_category" value={{product_category}}>
+                    <input type="text" readonly name="order_id" value="{{order_id}}">
+                    <input type="text" readonly name="title" value="{{title}}">
+                    <button type="submit" class="mt-2 mx-auto btn btn-success">Send Email</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $("input,select").addClass("form-control col-lg-6")
+</script>
+{% endblock %}

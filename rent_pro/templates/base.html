@@ -135,6 +135,10 @@
                     <a href="{% url 'users:user-list-template' %}" class="nav-link link text-truncate">
                         <i class="fs-5 bi-people"></i><span class="ms-1 d-none d-sm-inline">Users</span> </a>
                 </li>
+                <li>
+                    <a href="{% url 'products:send-return-email' %}" class="nav-link link text-truncate">
+                        <i class="fs-5 bi-people"></i><span class="ms-1 d-none d-sm-inline">Send Return Email</span> </a>
+                </li>
                 {% else %}
                 <li>
                     <a href="{% url 'products:get-cart-api' %}" class="nav-link link text-truncate">

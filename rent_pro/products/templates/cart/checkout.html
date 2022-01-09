@@ -60,7 +60,9 @@
     let mn = dt.getMonth() + 1
     let date = dt.getDate() + 3
     date = date > 10 ? date : '0' + date
+    mn = mn > 10 ? mn : '0' + mn
     dt = dt.getFullYear() + '-' + mn + '-' + date
+
     $("#id_email").val("{{user.email}}")
     $("#id_email, #id_total_amount, #id_your_bid_total").attr("readonly", true)
     $("#id_total_amount").val("{{total_amount}}")

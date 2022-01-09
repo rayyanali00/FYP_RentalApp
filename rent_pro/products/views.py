@@ -29,6 +29,9 @@ from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from notifications.signals import notify
 from django.contrib.auth import get_user_model
+from datetime import datetime
+from datetime import timedelta
+
 
 # Create your views here.
 User = get_user_model()
@@ -129,9 +132,11 @@ def get_cart_data(request):
     if request.method == 'POST':
         request_getdata = request.POST.get('data_dict', None)
         request_getdata = json.loads(request_getdata)
+        print()
         cart_obj = Cart.objects.create(user=request.user)
         prod_obj = Product.objects.get(product_name=request_getdata['prod_name'])
         prod_obj.product_quantity = prod_obj.product_quantity - request_getdata['quantity']
+        return_date = (datetime.now() + timedelta(days=request_getdata['days']+1)).strftime('%Y-%m-%d')
         cart_obj.product_name=request_getdata['prod_name']
         cart_obj.product_category=request_getdata['prod_cat']
         cart_obj.product_subcategory=request_getdata['prod_sub']
@@ -139,6 +144,8 @@ def get_cart_data(request):
         cart_obj.quantity = request_getdata['quantity']
         cart_obj.your_bid_price = request_getdata['your_bid_price']
         cart_obj.order_id = "hello"
+        cart_obj.return_date = return_date
+        
         cart_obj.save()
         prod_obj.save()
         return JsonResponse({'url':reverse('products:get-cart-api')})
@@ -282,6 +289,54 @@ def OrderRequestForm(request):
     }
     return render(request,'orders/order_request_form.html',context)
 
+@login_required
+def SendReturnEmailList(request):
+    if request.user.user_role == 'Admin':
+        return render(request,'return_items/send_return_email.html')
+    return Http404
+
+
+@login_required
+@api_view(['GET'])
+def ItemListApi(request):
+    dt_diff = (datetime.now() + timedelta(days=3)).strftime('%Y-%m-%d')
+    cart_obj = Cart.objects.filter(return_date__lte=dt_diff, return_email_sent=False)
+    serializer_obj = CartSerializer(cart_obj, many=True)
+    return Response(serializer_obj.data)
+
+def SendEmailForm(request):
+    if request.user.user_role == "Admin":
+        qs = Cart.objects.filter(order_id=request.GET.get('order_id')).values('user__email')
+        print(qs)
+        context = dict(
+                {
+            'id':request.GET.get('id'),
+            'order_id':request.GET.get('order_id'),
+            'product_category':request.GET.get('product_cat'),
+            'product_sub_category':request.GET.get('product_sub'),
+            'title':request.GET.get('title'),
+            'email':qs[0]['user__email']
+            }
+            )
+        return render(request,'return_items/send_email_form.html', context=context)
+    return Http404
+
+def SendReturnEmail(request):
+    if request.method == 'POST':
+        print(request.POST)
+        subject, from_email, to = 'Item Return!!! 3 days left', settings.EMAIL_HOST_USER, 'rayyanali929@gmail.com'
+        text_content = f"Dear Customer\
+            It's Time to return our item, I hope you enjoyed our service\
+                Item Title:{request.POST.get('title')} Order ID is {request.POST.get('order_id')}\
+                    \n Hopefully, we can assis you in future for your needs"
+        html_content = f'<h1>Order Accepted</h1> <h2>Your order request has been accepted<h2> <h3>Order Id : {request.POST.get("order_id")}</h3> <h3>Please complete your payment details, so we can deliever your order at your door step</h3><h5>Here is the link for payment process</h5>'
+        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+        print(request.POST.get('id'))
+        qs = Cart.objects.filter(id=request.POST.get('product_id')).update(return_email_sent=True)
+        return HttpResponseRedirect(reverse('products:send-return-email'))
+
 def OrderRequestStatus(request):
     if request.method == "POST":
         form = OrderStatusForm(request.POST)
@@ -386,13 +441,6 @@ def ProductDelete(request,pk):
     prod_obj = Product.objects.get(id=pk).delete()
     messages.success(request,"Product Deleted Successfully")
     return HttpResponseRedirect(reverse('products:product-list-template'))
-
-    
-#extra django-rest-framework
-#unsued
-@api_view(['GET'])
-def api_overview(request):
-    return Response('Your api-overview')
 
 
 

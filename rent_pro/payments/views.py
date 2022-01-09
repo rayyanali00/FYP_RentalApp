@@ -23,6 +23,7 @@ def payment_form(request):
     context['email'] = order_obj.email
     context['your_bid_total'] = order_obj.your_bid_total
     context['name']=order_obj.email.split('@')[0]
+    context['order_id'] = request.GET.get('order_id')
     return render(request, 'payment_form.html', context=context)
 
 def payment_success(request):
@@ -49,7 +50,8 @@ def charge_user(request):
             msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
             msg.attach_alternative(html_content, "text/html")
             msg.send()
-            order_obj = Order.objects.get(order_id=request.POST.get('order_id')).update(payment_process="Received")
+            print(request.POST.get('order_id'))
+            order_obj = Order.objects.filter(order_id=request.POST.get('order_id')).update(payment_process="Received")
         except stripe.error.CardError as e:
             messages.warning(request, e.user_message)
     return redirect(reverse('payments:payment-success'))

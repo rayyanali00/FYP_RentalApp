@@ -52,6 +52,8 @@ class Cart(models.Model):
     your_bid_price = models.IntegerField(null=True, blank=True)
     is_checkout = models.BooleanField(default=False)
     quantity = models.IntegerField(null=True)
+    return_date = models.DateField(null=True, blank=True)
+    return_email_sent = models.BooleanField(default=False)
     
     def __str__(self):
         return str(self.id)
