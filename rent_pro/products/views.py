@@ -329,9 +329,9 @@ def SendReturnEmail(request):
             It's Time to return our item, I hope you enjoyed our service\
                 Item Title:{request.POST.get('title')} Order ID is {request.POST.get('order_id')}\
                     \n Hopefully, we can assis you in future for your needs"
-        html_content = f'<h1>Order Accepted</h1> <h2>Your order request has been accepted<h2> <h3>Order Id : {request.POST.get("order_id")}</h3> <h3>Please complete your payment details, so we can deliever your order at your door step</h3><h5>Here is the link for payment process</h5>'
+        # html_content = f'<h1>Order Accepted</h1> <h2>Your order request has been accepted<h2> <h3>Order Id : {request.POST.get("order_id")}</h3> <h3>Please complete your payment details, so we can deliever your order at your door step</h3><h5>Here is the link for payment process</h5>'
         msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-        msg.attach_alternative(html_content, "text/html")
+        msg.attach_alternative(text_content, "text/html")
         msg.send()
         print(request.POST.get('id'))
         qs = Cart.objects.filter(id=request.POST.get('product_id')).update(return_email_sent=True)
