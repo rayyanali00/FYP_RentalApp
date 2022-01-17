@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer"
@@ -49,7 +48,7 @@
 
     <script src="{% static 'js/datatable/structure.js' %}"></script>
     <script src="{% static 'js/datatable/functions.js' %}"></script>
-    {% block css %} {% endblock %} {% block js %} {% endblock %}
+    {% block title %} {% endblock %} {% block css %} {% endblock %} {% block js %} {% endblock %}
 </head>
 
 <body>
@@ -60,8 +59,8 @@
                 <!-- <i class="bi bi-arrow-right-square-fill fs-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvas"></i> -->
                 <i class="fas fa-bars" data-bs-toggle="offcanvas" data-bs-target="#offcanvas"></i>
             </button> {% endif %} {% if user.user_role == 'Admin' %}
-            <a class="navbar-brand" href="{% url 'users:admin-dashboard' %}">Navbar</a> {% else %}
-            <a class="navbar-brand" href="{% url 'products:products' %}">Navbar</a> {% endif %}
+            <a class="navbar-brand" href="{% url 'users:admin-dashboard' %}"><img src="{% static 'images/main-logo.png' %}" class="navbar-logo" alt=""></a> {% else %}
+            <a class="navbar-brand" href="{% url 'products:products' %}"><img src="{% static 'images/main-logo.png' %}" class="navbar-logo" alt=""></a> {% endif %}
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -170,6 +169,12 @@
         </div>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js " integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM " crossorigin="anonymous "></script>
+    <script>
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
 </body>
 
 </html>

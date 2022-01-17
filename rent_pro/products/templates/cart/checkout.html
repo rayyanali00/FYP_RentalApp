@@ -1,7 +1,9 @@
-{% extends 'base.html' %} {% block body %}
+{% extends 'base.html' %} {% block title %}
+<title>Checkout Details</title>
+{% endblock %}{% block body %}
 <div class="row">
     <div class="col-lg-5 mx-auto">
-        <div class="card prod-card">
+        <div class="card prod-card login-card">
             <div class="card-header">
                 <h4>Shipping Details</h4>
             </div>
@@ -46,7 +48,9 @@
                         <label for="deliever_at">Delievery Date</label> {{form.deliever_at}}
                         <small id="emailHelp" class="form-text text-muted">Make sure you give atleast 3 days headsup for the delievery.</small>
                     </div>
-                    <button type="submit" class="btn btn-primary">Checkout</button>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary book-btn">Checkout</button>
+                    </div>
                 </form>
             </div>
         </div>

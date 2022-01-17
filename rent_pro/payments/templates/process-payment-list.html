@@ -1,52 +1,50 @@
 {% extends 'base.html' %} {% load static %} {% block css %}
 <link rel="stylesheet" href="{% static 'css/table.css' %}"> {% endblock %} {% block js %} {% endblock %} {% block body %}
 <div class="preview-sec mt-3">
-    <!-- <div class="row">
-      <div class="col-lg-12">
-        <div class="text-center">
-          <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
-          </div>
-        </div> -->
     <div class="row">
-        <div class="col-lg-12">
-            <h3 class="text-center pt-2">Process Payments</h3>
-        </div>
-    </div>
-    <hr>
-    <div class="form-group col-lg-2">
-        <img src="{% static 'images/more_options.png' %}" class="toggle-options" width="30%" height="50%" alt="" title="More Options" style="cursor: pointer;">
-    </div>
-    <div class="options">
-        <div class="form-group col-lg-2">
-            <select name="export-cols" id="exportLink" class="form-control">
-            <option>Export Data</option>
-            <option id="copy">Copy to clipboard</option>
-            <option id="excel">Export as Excel</option>
-            <option id="csv">Export as CSV</option>
-            <option id="print">Export as Print</option>
-          </select>
-        </div>
-        <!-- <div class="form-group col-lg-2">
-                  <a class="btn submit-btn" id="imputation">Imputation</a>
-              </div> -->
-    </div>
-    <span class="loader my-3"></span>
-    <table id="dtpaymentprocess" name="dtpaymentprocess" class="display table table-hover table-borderless dt-responsive table-responsive-lg nowrap" width="100%">
-        <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>Email</th>
-                <th>Total Order Bid</th>
-                <th>Process Payment</th>
-            </tr>
-        </thead>
+        <div class="col-lg-12 login-card">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="text-center pt-2">Process Payments</h3>
+                </div>
+            </div>
+            <hr>
+            <div class="form-group col-lg-2">
+                <img src="{% static 'images/more_options.png' %}" class="toggle-options" width="30%" height="50%" alt="" title="More Options" style="cursor: pointer;">
+            </div>
+            <div class="options">
+                <div class="form-group col-lg-2">
+                    <select name="export-cols" id="exportLink" class="form-control">
+                <option>Export Data</option>
+                <option id="copy">Copy to clipboard</option>
+                <option id="excel">Export as Excel</option>
+                <option id="csv">Export as CSV</option>
+                <option id="print">Export as Print</option>
+              </select>
+                </div>
+                <!-- <div class="form-group col-lg-2">
+                      <a class="btn submit-btn" id="imputation">Imputation</a>
+                  </div> -->
+            </div>
+            <span class="loader my-3"></span>
+            <table id="dtpaymentprocess" name="dtpaymentprocess" class="display table table-hover table-borderless dt-responsive table-responsive-lg nowrap" width="100%">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Email</th>
+                        <th>Total Order Bid</th>
+                        <th>Process Payment</th>
+                    </tr>
+                </thead>
 
-        <tbody id="orders-data">
+                <tbody id="orders-data">
 
-        </tbody>
-    </table>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
 </div>
-
 <script type="text/javascript">
     // email: "steve@email.com"
     // order_id: "3ab0b3bf-d334-472a-9392-4d7fbdbcba65"

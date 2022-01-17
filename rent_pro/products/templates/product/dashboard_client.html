@@ -1,4 +1,6 @@
-{% extends 'base.html' %} {% block body %}
+{% extends 'base.html' %} {% block title %}
+<title>Products</title>
+{% endblock %}{% block body %}
 
 <div class="row d-flex flex-row ms-1">
     <!-- <div class="col-lg-9"></div> -->
@@ -27,7 +29,7 @@
     {% if products|length > 0 %} {% for i in products %}
     <div class="col-lg-4 my-3">
         <div class="card-group">
-            <div class="card prod-card">
+            <div class="card prod-card login-card">
                 <img src="{{i.prod_img.url}}" class="card-img-top" alt="{{i.product_name}}" style="height: 300px;">
                 <div class="card-body">
 

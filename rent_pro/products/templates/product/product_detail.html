@@ -1,10 +1,12 @@
-{% extends 'base.html' %} {% block body %}
+{% extends 'base.html' %} {% block title %}
+<title>Product Detail</title>
+{% endblock %} {% block body %}
 <div class="row my-2">
     <div class="col-lg-10 mx-auto">
-        <div class="card prod-card mb-3">
+        <div class="card prod-card login-card mb-3">
             <div class="row g-0">
                 <div class="col-md-5">
-                    <img src="{{product.prod_img.url}}" class="img-fluid rounded-start" alt="{{product.product_name}}" style="height: 438px; width: 100%;">
+                    <img src="{{product.prod_img.url}}" class="img-fluid rounded-start" alt="{{product.product_name}}" style="height:540px; width: 100%;">
                 </div>
                 <div class="col-md-7">
                     <div class="card-body">
