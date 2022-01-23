@@ -12,4 +12,5 @@ urlpatterns = [
     path("admin_dashboard/",views.AdminDashboard.as_view(), name="admin-dashboard"),
     path("user_list_template/",views.UserListTemplate.as_view(), name="user-list-template"),
     path("user_list/",views.User_List, name="user-list-api"),
+    path("user_list_graph_api/",views.User_List_Graph, name="user-list-graph-api"),
 ]

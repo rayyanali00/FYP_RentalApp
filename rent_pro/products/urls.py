@@ -42,6 +42,8 @@ urlpatterns = [
     path('send-email-form/',views.SendEmailForm, name='send-email-form'),
     path('send-email/', views.SendReturnEmail, name='send-email'),
     
+    path('OrderCountGraphApi/',views.OrderCountGraphApi, name="order-graph-api"),
+    
     #unused
     # path('api-overview/', views.api_overview, name="api-overview"),
     path('product-api/',views.Order_List, name="product-api"),

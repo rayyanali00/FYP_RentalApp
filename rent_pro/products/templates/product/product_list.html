@@ -1,4 +1,8 @@
-{% extends 'base.html' %} {% load static %} {% block css %}
+{% extends 'base.html' %} {% block title %}
+<title>
+    Product LIst
+</title>
+{% endblock %} {% load static %} {% block css %}
 <link rel="stylesheet" href="{% static 'css/table.css' %}"> {% endblock %} {% block js %} {% endblock %} {% block body %}
 <div class="preview-sec mt-3">
     <div class="row">
@@ -39,7 +43,6 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-
                 <tbody id="orders-data">
 
                 </tbody>
@@ -69,7 +72,7 @@
         mRender: function(data, type, row) {
             let delUrl = '{% url "products:delete-product" 123 %}'.replace('123', row['id'])
             let editUrl = '{% url "products:update-product" 123 %}'.replace('123', row['id'])
-            return `<a class="table-edit" href=${editUrl}>EDIT</a> <a class="table-delete" href=${delUrl}>DELETE</a>`
+            return `<a class="table-edit" href=${editUrl}><i class="fas fa-user-edit font-weight-bold"></i></a> <a class="table-delete" href=${delUrl}><i class="fas fa-trash text-danger font-weight-bold"></i></a>`
         }
     }, ];
 

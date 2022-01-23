@@ -1,7 +1,99 @@
-{% extends 'base.html' %} {% load static %} {% block js %}
+{% extends 'base.html' %} {% block css %}
+<style>
+    hr {
+        color: rgb(216, 209, 209) !important;
+        width: 90% !important;
+        margin: auto !important;
+    }
+</style>
+{% endblock css %} {% block title %}
+<title>
+    Admin Dashboard
+</title>
+{% endblock %} {% load static %} {% block js %}
 <script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
 {% endblock %} {% block body %}
-
-<h1>This is admin page</h1>
+<div class="row mx-1">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header text-center">
+                <h3>Total Orders</h3>
+            </div>
+            <div class="card-body text-center">
+                <h5>{{orders_count}}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header text-center">
+                <h3>Delievered Orders</h3>
+            </div>
+            <div class="card-body text-center">
+                <h5>{{del_orders}}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header text-center">
+                <h3> Accepted Orders
+                </h3>
+            </div>
+            <div class="card-body text-center">
+                <h5>{{accepted_order}}</h5>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mx-1">
+    <div class="col-lg-6 p-2">
+        <div class="card prod-card">
+            <div class="mt-3">
+                <div class="row">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4 text-center">
+                        <h2>Users Count</h2>
+                    </div>
+                    <div class="col-lg-4">
+                        <button id="graph-type-user" class="switch btn btn-outline-secondary text-secondary">Switch to <i class="fa fa-bar-chart" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="card-body">
+                <canvas id="user-count" class="graphs"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 p-2">
+        <div class="card prod-card">
+            <div class="mt-3">
+                <div class="row">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4">
+                        <h2>Order Count</h2>
+                    </div>
+                    <div class="col-lg-4">
+                        <button id="graph-type-count" class="switch btn btn-outline-secondary text-secondary">Switch to <i class="fa fa-bar-chart" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="card-body">
+                <canvas id="orders-count" class="graphs"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/graph/graph.js' %}"></script>
+<script>
+    let graph_user_api = "{% url 'users:user-list-graph-api' %}"
+    let graph_order_api = "{% url 'products:order-graph-api' %}"
+        // ApiCall(graph_user_api)
+    plotGraph('user-count', "User Count", graph_user_api, "graph-type-user")
+    plotGraph('orders-count', "Orders Count", graph_order_api, "graph-type-count")
+        // ApiCall(graph_order_api)
+</script>
 
 {% endblock %}

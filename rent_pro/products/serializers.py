@@ -47,3 +47,9 @@ class CartSerializer(serializers.ModelSerializer):
         model = Cart
         exclude = ('user','is_checkout')
         
+class OrderGraphSerializer(serializers.ModelSerializer):
+    counted = serializers.IntegerField()
+    dated = serializers.CharField()
+    class Meta:
+        model = Order
+        fields = ['id','ordered_at','counted','dated',]

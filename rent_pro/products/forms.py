@@ -26,7 +26,7 @@ class OrderForm(ModelForm):
         model = models.Order
         fields = ["address","email","total_amount","deliever_at","country","state","city","zip_code",'your_bid_total']
         required = "__all__"
-class OrderStatusForm(ModelForm):
+class OrderDelieveryStatusForm(ModelForm):
     class Meta:
         model = models.Order
         fields = ["status"]

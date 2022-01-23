@@ -1,8 +1,12 @@
-{% extends 'base.html' %} {% block body %}
+{% extends 'base.html' %} {% block title %}
+<title>
+    Product Form
+</title>
+{% endblock %} {% block body %}
 
 <div class="row">
     <div class="col-lg-8 mx-auto">
-        <div class="card prod-card">
+        <div class="card prod-card login-card">
             <div class="card-header">
                 {% if form.instance.pk %}
                 <h3>Edit Product</h3>
@@ -41,18 +45,13 @@
                     <div class="form-group">
                         <label for="image">Product Image</label> {{form.prod_img}}
                     </div>
-                    {% if form.instance.pk %}
-                    <button type="submit" class="btn btn-secondary">Edit Product</button> {% else %}
-                    <button type="submit" class="btn btn-primary">Add Product</button> {% endif %}
+                    <div class="text-center">
+                        {% if form.instance.pk %}
+                        <button type="submit" class="btn btn-secondary book-btn">Edit Product</button> {% else %}
+                        <button type="submit" class="btn btn-primary book-btn">Add Product</button> {% endif %}
+
+                    </div>
                 </form>
-                <!-- prod_cat = models.ForeignKey(Category, null=True, blank=True, on_delete=models.CASCADE)
-        prod_sub = models.ForeignKey(Sub_Category, null=True, blank=True, on_delete=models.CASCADE)
-        product_name = models.CharField(max_length=255, null=True, blank=True)
-        product_desc = models.CharField(max_length=255, null=True, blank=True)
-        prod_img = models.ImageField(upload_to="item_pics", default="nothing.jpg")
-        product_price = models.FloatField(max_length=255, null=True, blank=True)
-        product_quantity = models.IntegerField(null=True, blank=True)
-        timePeriod = models.IntegerField(null=True,default=1) -->
             </div>
         </div>
     </div>

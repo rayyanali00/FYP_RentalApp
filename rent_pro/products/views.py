@@ -8,7 +8,7 @@ from django.views.generic import ListView,FormView,DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from .models import Category, Product, Sub_Category,Cart, Order
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .forms import CategoryForm,OrderForm,OrderStatusForm,ProductForm,OrderStatusForm
+from .forms import CategoryForm,OrderForm,OrderStatusForm,ProductForm,OrderStatusForm,OrderDelieveryStatusForm
 from django.http import HttpResponseRedirect
 from django.urls.base import reverse, reverse_lazy
 from django.utils.http import urlencode
@@ -20,7 +20,7 @@ from django.conf import settings
 from django.core.mail import send_mail,EmailMultiAlternatives
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import CartSerializer, ProductSerializer,OrderSerializer,OrderRequestSerializer
+from .serializers import CartSerializer, OrderGraphSerializer, ProductSerializer,OrderSerializer,OrderRequestSerializer
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 import uuid
@@ -31,7 +31,20 @@ from notifications.signals import notify
 from django.contrib.auth import get_user_model
 from datetime import datetime
 from datetime import timedelta
-
+from django.db.models.functions import Cast, Trunc
+from django.db.models import (Q, 
+                            Sum, 
+                            F, 
+                            Max, 
+                            Min,
+                            Count,
+                            Value,
+                            ExpressionWrapper, 
+                            DurationField,
+                            DecimalField, 
+                            DateField,
+                            DateTimeField, 
+                            TimeField)
 
 # Create your views here.
 User = get_user_model()
@@ -380,7 +393,7 @@ def OrderDetailApi(request,pk,order_id):
 def OrderStatusUpdate(request):
     if request.user.user_role == "Admin":
         order_obj = Order.objects.get(order_id=request.GET.get('order_id'))
-        form_ins = OrderStatusForm(instance=order_obj)
+        form_ins = OrderDelieveryStatusForm(instance=order_obj)
         context = {
             'form':form_ins,
             'order_id':request.GET.get('order_id')
@@ -392,7 +405,7 @@ def OrderStatusUpdate(request):
 @login_required
 def OrderStatus(request,pk):
     if request.method == "POST":
-        form = OrderStatusForm(request.POST)
+        form = OrderDelieveryStatusForm(request.POST)
         if form.is_valid():
             print(form.cleaned_data.get('status'),pk)
             order_obj = Order.objects.get(order_id=pk)
@@ -443,5 +456,9 @@ def ProductDelete(request,pk):
     return HttpResponseRedirect(reverse('products:product-list-template'))
 
 
-
- 
+@login_required
+@api_view(['GET'])
+def OrderCountGraphApi(request):
+    order_obj = Order.objects.all().values(dated=Trunc('ordered_at','month')).annotate(counted=Count('id')).values('dated','counted').order_by('dated')
+    serializer_obj = OrderGraphSerializer(order_obj, many=True)
+    return Response(serializer_obj.data)

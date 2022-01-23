@@ -1,24 +1,30 @@
-{% extends 'base.html' %} {% block body %}
+{% extends 'base.html' %} {% block title %}
+<title>
+    Order Form
+</title>
+{% endblock %} {% block body %}
 <div class="row">
     <div class="col-lg-4 mx-auto">
-        <div class="card prod-card">
+        <div class="card prod-card login-card">
             <div class="card-header">
                 <h4>Order Request Status</h4>
             </div>
-            <div class="card-body">
-                <form action="{% url 'products:order-request-status' %}" method="post">
+            <div class="card-body mx-auto">
+                <form action="{% url 'products:order-request-status' %}" method="post" id="status-form">
                     {% csrf_token %}
-                    <label for="order_request">Order Request Status</label> {{form.is_accepted}}
+                    <label for="order_request"><h5>Order Request Status</h5></label> {{form.is_accepted}}
                     <input type="hidden" name="order_id" value="{{order_id}}">
                     <input type="hidden" name="email" value="{{email}}">
-                    <button type="submit" class="mt-2 mx-auto btn btn-success">Update Request</button>
                 </form>
 
+            </div>
+            <div class="card-footer text-center">
+                <button type="submit" form="status-form" class="btn btn-success">Update Request</button>
             </div>
         </div>
     </div>
 </div>
 <script>
-    $("input,select").addClass("form-control col-lg-6")
+    $("input,select").addClass("form-control col-lg-12")
 </script>
 {% endblock %}

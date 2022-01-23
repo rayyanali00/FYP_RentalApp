@@ -156,3 +156,17 @@ input {
 .cart_price {
     font-size: 1.4rem;
 }
+
+.graphs {
+    width: 100%;
+}
+
+.switch {
+    font-size: 0.8rem !important;
+}
+
+.switch:hover {
+    background-color: #00aeef !important;
+    color: white !important;
+    border: 1px solid transparent !important;
+}
