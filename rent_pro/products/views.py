@@ -112,10 +112,18 @@ def ProductCategoryApi(request):
         print(sub_category)
         dct = dict((y,x) for x,y in sub_category)
         lst_dct = {}
-        lst_dct['Furniture'] = [k for k, v in dct.items() if v == 'Furniture']
-        lst_dct['ElectricAppliances'] = [k for k, v in dct.items() if v == 'ElectricAppliances']
-        lst_dct['FitnessEquipment'] = [k for k, v in dct.items() if v == 'FitnessEquipment']
-        lst_dct['Crockery'] = [k for k, v in dct.items() if v == 'Crockery']
+        # lst_dct['Furniture'] = [k for k, v in dct.items() if v == 'Furniture']
+        # lst_dct['ElectricAppliances'] = [k for k, v in dct.items() if v == 'ElectricAppliances']
+        # lst_dct['FitnessEquipment'] = [k for k, v in dct.items() if v == 'FitnessEquipment']
+        # lst_dct['Crockery'] = [k for k, v in dct.items() if v == 'Crockery']
+        for k,v in dct.items():
+            lst_dct[v] = [i for i,j in dct.items() if j == v]
+        print(lst_dct)
+        print("****************")
+        print(dct)
+        print("****************")
+        print(lst_dct['Furniture'])
+        
         return JsonResponse(lst_dct, safe=False)
           
 class ProductListFilter(LoginRequiredMixin,ListView):
@@ -274,24 +282,47 @@ def Order_List(request):
     return Response(serializer_obj.data)
 
 @login_required
+@api_view(['GET'])
+def PendingOrderApi(request):
+    order_obj = Order.objects.filter(status='Pending', payment_process="Received")
+    serializer_obj = OrderSerializer(order_obj, many=True)
+    return Response(serializer_obj.data)
+
+@login_required
+@api_view(['GET'])
+def DelieveredOrderApi(request):
+    order_obj = Order.objects.filter(status='Delievered', payment_process="Received")
+    serializer_obj = OrderSerializer(order_obj, many=True)
+    return Response(serializer_obj.data)
+
+
+@login_required
 def OrderListTemplate(request):
     return render(request, 'orders/orders_list.html')
 
 @login_required
+def PendingOrderListTemplate(request):
+    return render(request, 'orders/pending-orders-list.html')
+
+@login_required
+def DelieveredOrderListTemplate(request):
+    return render(request, 'orders/delievered-orders-list.html')
+
+
+@login_required
 @api_view(['GET'])
 def Order_Request(request):
-    order_obj = None
-    serializer_obj = None
-    order_obj = Order.objects.filter(is_accepted='Pending')
+    if request.user.user_role == "General":
+        order_obj = Order.objects.filter(user=request.user,is_accepted='Pending')
+    else:
+        order_obj = Order.objects.filter(is_accepted='Pending')
     serializer_obj = OrderRequestSerializer(order_obj, many=True)
     return Response(serializer_obj.data)
 
 
 @login_required
 def OrderRequestTemplate(request):
-    if request.user.user_role=='Admin':
-        return render(request, 'orders/order_requests_list.html')
-    return Http404
+    return render(request, 'orders/order_requests_list.html')
 
 @login_required
 def OrderRequestForm(request):

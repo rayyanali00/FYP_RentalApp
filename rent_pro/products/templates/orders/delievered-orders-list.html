@@ -9,7 +9,7 @@
         <div class="col-lg-12 login-card mx-auto">
             <div class="row">
                 <div class="col-lg-12">
-                    <h2 class="text-center pt-2 mt-2">Orders</h2>
+                    <h2 class="text-center pt-2 mt-2">Delievered Orders</h2>
                 </div>
             </div>
             <hr>
@@ -82,7 +82,7 @@
                         let dateCol = 8;
                         let expArr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
                         let tableId = '#dtorderlist';
-                        apiUrl = '{% url "products:order-list-api" %}';
+                        apiUrl = '{% url "products:delievred-orders-api" %}';
                         let user_role = "{{user.user_role}}"
                         let responseArrCols = [{
                             "data": "order_id"
@@ -131,26 +131,9 @@
 
                             }
                         }, {
-                            "data": "status",
-                            "render": function(data, type, row) {
-                                console.log("****************************")
-                                console.log(row)
-                                if (user_role == "Admin" && row['payment_process'] == "Received") {
-                                    let url_mask = "{% url 'products:order-status' %}";
-                                    url_mask = `${url_mask}?order_id=${row.order_id}`
-                                    return '<a href=' + url_mask + '>' + data + '</a>'
-                                } else {
-                                    return data;
-                                }
-
-                            }
+                            "data": "status"
                         }, {
                             "data": "user",
-                            "render": function(data, type, row) {
-                                console.log(row.order_id);
-                                let url_mask = "{% url 'products:order-detail-template' 123 456 %}".replace('123', data).replace('456', row.order_id);
-                                return '<a href=' + url_mask + '>Details</a>'
-                            }
                         }, {
                             "data": "payment_process",
                             "render": function(data, type, row) {

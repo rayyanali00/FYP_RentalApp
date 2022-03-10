@@ -10,7 +10,9 @@ from django.contrib import messages
 from .serializers import PaymentSerializer
 from django.contrib.auth.decorators import login_required
 from products.models import Order
+from users.models import User
 from django.core.mail import send_mail,EmailMultiAlternatives
+
 
 stripe.api_key = settings.STRIPE_PRIVATE_KEY
 
@@ -59,7 +61,13 @@ def charge_user(request):
 @login_required
 @api_view(['GET'])
 def ProcessPaymentDataApi(request):
-    pay_obj = Order.objects.filter(payment_process='pending')
+    print(request.user.user_role)
+    if request.user.user_role == "General":
+        user_obj = User.objects.get(email=request.user.email)
+        pay_obj = Order.objects.filter(user=user_obj,is_accepted="Accept",payment_process='pending')
+    else:
+        print("elseeeeeeeeee")
+        pay_obj = Order.objects.filter(is_accepted="Accept",payment_process='pending')
     serializer_obj = PaymentSerializer(pay_obj, many=True)
     return Response(serializer_obj.data)
 

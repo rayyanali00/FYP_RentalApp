@@ -94,11 +94,11 @@
         </div>
         <div class="offcanvas-body px-0">
             <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-start" id="menu">
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="{% url 'products:products' %}" class="nav-link link text-truncate">
                         <i class="fs-5 bi-house"></i><span class="ms-1 d-none d-sm-inline">Home</span>
                     </a>
-                </li>
+                </li> -->
                 {% if user.user_role == 'Admin' %}
                 <li>
                     <a href="{% url 'users:admin-dashboard' %}" data-bs-toggle="collapse" class="nav-link link text-truncate">
@@ -111,8 +111,8 @@
                     <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdown">
                         <li><a class="dropdown-item" href="{% url 'products:order-list-template' %}">All Orders</a></li>
                         <li><a class="dropdown-item" href="{% url 'products:order-request-template' %}">Order Requests</a></li>
-                        <li><a class="dropdown-item" href="#">Pending Orders</a></li>
-                        <li><a class="dropdown-item" href="#">Delievered</a></li>
+                        <li><a class="dropdown-item" href="{% url 'products:pending-order-template' %}">Pending Orders</a></li>
+                        <li><a class="dropdown-item" href="{% url 'products:delievered-orders-template' %}">Delievered</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -148,6 +148,12 @@
                 <li>
                     <a href="{% url 'products:order-list-template' %}" data-bs-toggle="collapse " class="nav-link link text-truncate ">
                         <i class="fs-5 bi-speedometer2 "></i><span class="ms-1 d-none d-sm-inline ">Orders</span> </a>
+                </li>
+                <li>
+                    <!-- <li><a class="dropdown-item" href="{% url 'products:order-request-template' %}">Order Requests</a></li> -->
+
+                    <a href="{% url 'products:order-request-template' %}" data-bs-toggle="collapse " class="nav-link link text-truncate ">
+                        <i class="fs-5 bi-speedometer2 "></i><span class="ms-1 d-none d-sm-inline ">Orders Request</span> </a>
                 </li>
                 <li class="dropdown">
                     <a href="#" class="nav-link link dropdown-toggle  text-truncate" id="dropdown" data-bs-toggle="dropdown" aria-expanded="false">

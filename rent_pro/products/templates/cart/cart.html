@@ -41,6 +41,7 @@
         </div>
     </div>
 </div>
+{% else %} {% endif %} {% endfor %} {% if orders.count > 0 %}
 <div class="col-lg-6 mx-auto">
     <div class="card prod-card login-card my-3">
         <div class="card-body">
@@ -58,10 +59,6 @@
         </div>
     </div>
 </div>
-{% else %} {% endif %} {% endfor %} {% if orders.count > 0 %}
-<div class="row">
-</div>
-
 {% else %}
 <h1 class="text-center">No Items Found In Cart</h1>
 {% endif %}

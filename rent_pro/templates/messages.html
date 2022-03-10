@@ -1,4 +1,17 @@
+<!-- ALERT MESSAGES -->
 {% if messages %} {% for message in messages %}
-<div class="alert alert-primary" role="alert">
+<div style="margin-top:3%" class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
     {{message}}
-</div> {% endfor %} {% endif%}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<script>
+    let message_tags = "{{message.tags}}";
+    if (message_tags == "error") {
+        $(".alert").removeClass("alert-error");
+        $(".alert").addClass("alert-danger");
+    }
+</script>
+{% endfor %} {% endif%}
+<!-- end of alerts -->

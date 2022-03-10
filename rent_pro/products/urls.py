@@ -34,6 +34,12 @@ urlpatterns = [
     path('order-request-template/',views.OrderRequestTemplate, name="order-request-template"),
     path('order-request-api/',views.Order_Request, name="order-request-api"),
     
+    path('pending-orders-list/',views.PendingOrderListTemplate, name="pending-order-template"),
+    path('pending-orders-api/',views.PendingOrderApi, name="pending-order-api"),
+    
+    path('delievered-orders-list/',views.DelieveredOrderListTemplate, name="delievered-orders-template"),
+    path('delievered-orders-api/',views.DelieveredOrderApi, name="delievred-orders-api"),
+    
     path('order-request-form/',views.OrderRequestForm, name="order-request-form"),
     path('order-request-status/',views.OrderRequestStatus, name="order-request-status"),
     

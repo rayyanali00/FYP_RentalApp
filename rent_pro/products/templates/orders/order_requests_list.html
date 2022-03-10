@@ -77,6 +77,7 @@
                         let tableId = '#dtorderlist';
                         apiUrl = '{% url "products:order-request-api" %}';
                         let user_role = "{{user.user_role}}"
+                        console.log(user_role)
                         let responseArrCols = [{
                             "data": "order_id"
                         }, {
@@ -116,8 +117,12 @@
                         }, {
                             mRender: function(data, type, row) {
                                 let reqUrl = '{% url "products:order-request-form" %}'
-                                    // let editUrl = '{% url "products:update-product" 123 %}'.replace('123', row['order_id'])
-                                return `<a class="table-edit" href=${reqUrl}?order_id=${row['order_id']}&email=${row['email']}>Order Request</a>`
+                                if (user_role == "Admin") {
+                                    return `<a class="table-edit" href=${reqUrl}?order_id=${row['order_id']}&email=${row['email']}>Order Request</a>`
+                                } else {
+                                    return data
+                                }
+                                // let editUrl = '{% url "products:update-product" 123 %}'.replace('123', row['order_id'])
                             }
                         }, ]
                         loadRecordsInDataTable(dateCol, expArr, apiUrl, responseArrCols, tableId);
