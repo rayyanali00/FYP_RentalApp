@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser,User
 from PIL import Image
+from users.modelmanagers import UserManager
 
 # Create your models here.
 class User(AbstractUser):
@@ -11,6 +12,7 @@ class User(AbstractUser):
     user_role = models.CharField(max_length=120, choices=USER_ROLE_CHOICES, default="General")
     username = None
     email = models.EmailField(max_length=255, unique=True)
+    objects = UserManager()
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

@@ -368,7 +368,7 @@ def SendEmailForm(request):
 def SendReturnEmail(request):
     if request.method == 'POST':
         print(request.POST)
-        subject, from_email, to = 'Item Return!!! 3 days left', settings.EMAIL_HOST_USER, 'rayyanali929@gmail.com'
+        subject, from_email, to = 'Item Return!!! 3 days left', settings.EMAIL_HOST_USER, request.POST.get('email')
         text_content = f"Dear Customer\
             It's Time to return our item, I hope you enjoyed our service\
                 Item Title:{request.POST.get('title')} Order ID is {request.POST.get('order_id')}\

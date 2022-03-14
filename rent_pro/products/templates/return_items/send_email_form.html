@@ -9,10 +9,9 @@
             <div class="card-header">
                 <h4>Send Return Email</h4>
             </div>
-            <div class="card-body">
+            <div class="card-body mx-auto">
                 <form action="{% url 'products:send-email' %}" method="post">
                     {% csrf_token %}
-                    <label for="order_request">Send Return Email</label>
                     <input type="text" readonly name="product_id" value="{{id}}">
                     <input type="email" readonly name="email" value="{{email}}" id="">
                     <input type="text" readonly name="category" value={{product_category}}>
@@ -27,6 +26,6 @@
     </div>
 </div>
 <script>
-    $("input,select").addClass("form-control col-lg-6")
+    $("input,select").addClass("form-control col-lg-12 my-3")
 </script>
 {% endblock %}
