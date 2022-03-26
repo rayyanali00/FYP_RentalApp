@@ -170,3 +170,25 @@ input {
     color: white !important;
     border: 1px solid transparent !important;
 }
+
+@media screen and (max-width: 1109px) {
+    .offcanvas {
+        width: 50% !important;
+        font-size: 45px !important;
+    }
+}
+
+.offcanvas-header {
+    width: auto !important;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: rgb(211, 210, 210);
+    color: black;
+    text-align: center;
+    padding: 10px 0px;
+}
