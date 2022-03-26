@@ -24,9 +24,9 @@ TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
 SECRET_KEY = 'django-insecure-l0ug-$3elos%hqt8z28cr)j8=)y80-#_1my342eu#k4uiuvt!#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['rent-pay.herokuapp.com','127.0.0.1']
+ALLOWED_HOSTS = ['rent-pay.herokuapp.com','127.0.0.1','localhost']
 
 # Stripe configuration key
 STRIPE_PUBLISHABLE_KEY = 'pk_test_51KC4VhKMoLpHmhyXqxoq6ZmGDw2XWUH70oy6VZHihuapR3Z9bjUnpfOeNFDCwjmaRYHvPo0uuwpmFC3QBGiWrCjR00tTcVohWL'
@@ -169,7 +169,7 @@ STATICFILES_DIRS = (
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
 
-LOGIN_REDIRECT_URL = 'products:main-redirect'
+LOGIN_REDIRECT_URL = 'products:products'
 LOGOUT_REDIRECT_URL = 'users:login'
 
 # Default primary key field type

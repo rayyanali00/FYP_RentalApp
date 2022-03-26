@@ -53,11 +53,10 @@ class MainRedirect(LoginRequiredMixin, View):
         print(self.request.user.user_role)
         if self.request.user.user_role=='Admin':
             return HttpResponseRedirect(reverse('users:admin-dashboard'))
-
         return HttpResponseRedirect(reverse('products:products'))    
 
 
-class DashboardClient(LoginRequiredMixin,FormView):
+class DashboardClient(FormView):
     template_name="product/dashboard_client.html"
     form_class = CategoryForm
     model = Category
@@ -126,7 +125,7 @@ def ProductCategoryApi(request):
         
         return JsonResponse(lst_dct, safe=False)
           
-class ProductListFilter(LoginRequiredMixin,ListView):
+class ProductListFilter(ListView):
     template_name="product/dashboard_client.html"
     def get_queryset(self):
 

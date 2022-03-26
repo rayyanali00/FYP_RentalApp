@@ -57,13 +57,13 @@
     <nav class="navbar navbar-expand-lg navbar-bg navbar-light">
         <div class="container-fluid">
             {% if user.is_authenticated %}
-            <button class="btn toggle-btn float-end" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" role="button">
+            <button class="btn toggle-btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" role="button">
                 <!-- <i class="bi bi-arrow-right-square-fill fs-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvas"></i> -->
                 <i class="fas fa-bars" data-bs-toggle="offcanvas" data-bs-target="#offcanvas"></i>
             </button> {% endif %} {% if user.user_role == 'Admin' %}
             <a class="navbar-brand" href="{% url 'users:admin-dashboard' %}"><img src="{% static 'images/main-logo.png' %}" class="navbar-logo" alt=""></a> {% else %}
             <a class="navbar-brand" href="{% url 'products:products' %}"><img src="{% static 'images/main-logo.png' %}" class="navbar-logo" alt=""></a> {% endif %}
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler ms-auto mb-2 mb-lg-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -76,7 +76,7 @@
                             <i class="far fa-user"></i> {{user.first_name}}
                     </button>
                         <ul class="dropdown-menu me-5" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item" href="#"><i class="far fa-id-card"></i> Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'users:profile' %}"><i class="far fa-id-card"></i> Profile</a></li>
                             <li><a class="dropdown-item" href="{% url 'users:logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                         </ul>
                     </div>

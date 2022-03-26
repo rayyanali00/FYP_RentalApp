@@ -24,7 +24,8 @@ import notifications.urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/',include('users.urls', namespace="users"), name="users"),
-    path('',RedirectView.as_view(url='/accounts/login/')),
+    # path('',RedirectView.as_view(url='/accounts/login/')),
+    path('',RedirectView.as_view(url='/users/products/')),
     path('users/',include('products.urls', namespace="products"), name="products"),
     path('payments/',include('payments.urls', namespace="payments"), name="payments"),
 

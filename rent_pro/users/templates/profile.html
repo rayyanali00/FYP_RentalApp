@@ -1,0 +1,51 @@
+{% extends 'base.html' %} {% block title %}
+
+<!-- <form class="" action="" method="post">
+    {% csrf_token %}
+    <fieldset class="form-group">
+        <legend class="border-bottom mb-4 text-center profile-head">Profile Info</legend>
+        {{u_form.email}} {{u_form.first_name}} {{u_form.last_name}}
+    </fieldset>
+    <div class="form-group text-center">
+        <button type="submit" name="button" class="btn btn-outline-info update-profile">Update Profile</button>
+    </div>
+</form> -->
+<title>
+    Edit Profile
+</title>
+{% endblock %} {% block body %}
+
+<div class="row">
+    <div class="col-lg-6 mx-auto">
+        <div class="card prod-card login-card">
+            <div class="card-header">
+                <h3>Edit Profile</h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="email">Email</label> {{u_form.email}}
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <label for="category">First Name</label> {{u_form.first_name}}
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="subcategory">Last Name</label> {{u_form.last_name}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary book-btn">Edit Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $("input").addClass('form-control')
+</script>
+{% endblock %}

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.views.generic.base import TemplateView, View
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
@@ -27,7 +27,8 @@ from django.db.models import (Q,
                             DateTimeField, 
                             TimeField)
 
-
+from django.contrib.auth import authenticate,login
+from django.contrib import messages
 
 User = get_user_model()
 # Create your views here.
@@ -45,11 +46,25 @@ class RegisterUser(SuccessMessageMixin,CreateView):
         return reverse_lazy('users:login')
         
 class UpdateProfile(LoginRequiredMixin, View):
-    pass
-    
-class Test(LoginRequiredMixin,TemplateView):
-    template_name="test.html"
-    redirect_field_name = None
+    """
+        GET REQUEST: Get profile information of a user and prefill 
+                     the profile form with the obtained information
+        POST REQUEST: Updates the profile information in the database
+    """
+    def get(self, *args, **kwargs):
+        userform = UserUpdateForm(instance = self.request.user)
+        context = {'u_form': userform}
+        return render(self.request, 'profile.html', context = context)
+
+    def post(self, *args, **kwargs):
+        userform = UserUpdateForm(self.request.POST, instance = self.request.user)
+        if userform.is_valid():
+            userform.save()
+            messages.success(self.request, f'{self.request.user.email} your profile has been updated')
+            return redirect('users:profile')
+        context = {'u_form': userform}
+        return render(self.request, 'profile.html', context = context)
+
    
 class AdminDashboard(LoginRequiredMixin,TemplateView):
     template_name="admin_dashboard.html"
