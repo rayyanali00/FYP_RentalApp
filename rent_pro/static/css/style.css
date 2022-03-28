@@ -182,13 +182,24 @@ input {
     width: auto !important;
 }
 
-.footer {
+.footer-nav {
     position: fixed;
-    left: 0;
+    z-index: 99999;
     bottom: 0;
+    display: none;
     width: 100%;
-    background-color: rgb(211, 210, 210);
+    background-color: rgb(240, 240, 240);
+    font-size: 2rem;
+    font-family: Arial, sans-serif;
+    font-weight: normal;
     color: black;
     text-align: center;
-    padding: 10px 0px;
+    cursor: pointer;
+    left: 0;
+    padding: 7px 0;
+}
+
+.show,
+.footer-nav:hover {
+    display: block;
 }
